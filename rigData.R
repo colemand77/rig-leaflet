@@ -14,8 +14,11 @@ adj[, `:=`(region = State.Province,
           subregion = County, 
           adjName = paste(adj$State.Province, adj$County, sep = ","))]
 
-rig_County_names <- unique(adj[Country == "UNITED STATES" & State.Province != "alaska" & Locatin == "Land" & State.Province != "hawaii"
-                               ,adjName])
+rig_County_names <- unique(adj[Country == "UNITED STATES" & 
+                                 State.Province != "alaska" & 
+                                 Location == "Land" & 
+                                 State.Province != "hawaii",
+                               adjName])
 
 rigCountDates <- 1:length(unique(adj[,PublishDate]))
 names(rigCountDates) <-  unique(adj[,PublishDate])

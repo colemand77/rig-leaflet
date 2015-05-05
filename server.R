@@ -31,4 +31,6 @@ shinyServer(function(input, output, session) {
   output$DateUsed <- renderText(usedDate())
   
 })
+
+
 # Look at leafletproxy!? might be a faster way of rendering changes to the county polygons?
