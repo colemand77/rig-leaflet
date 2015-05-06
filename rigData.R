@@ -12,17 +12,21 @@ adj<- as.data.table(raw)
 adj[, `:=`(PublishDate = as.Date(PublishDate, format = "%m/%d/%Y"),
            State.Province = tolower(State.Province),
            County = tolower(County))]
-adj[State.Province == "louisiana" & County == "st. martin", County := "st martin:north"]
-adj[State.Province == "texas" & County == "galveston", County := "galveston:main"]
-adj[State.Province == "florida" & County == "okaloosa", County := "okaloosa:main"]
-adj[State.Province == "north carolina" & County == "currituck", County :=" currituck:main"]
-adj[State.Province == "virginia" & County == "accomack", County := "accomack:main"]
-adj[State.Province == "washington" & County == "pierce", County := "pierce:main"]
-adj[State.Province == "washington" & County == "san juan", County := "san juan:san juan island"]
 set(adj, i = NULL, j = "County", value = gsub(".","",adj[["County"]],fixed = TRUE))
-# this is roughly 2x faster:  system.time(set(adj, i = which(adj[["State.Province"]] == "washington" & adj[["County"]] == "san juan"), "County", "san juan:san juan island"))
-adj
 
+# modify county names to be consistent with map names
+changeNames <- list(c("louisiana", "st.martin", "st martin:north"), 
+                    c("texas", "galveston", "galveston:main"),
+                    c("florida", "okaloosa", "okaloosa:main"),
+                    c("north carolina", "currituck", "currituck:main"),
+                    c("virginia", "accomack","accomack:main"),
+                    c("washington","pierce","pierce:main"),
+                    c("washington","san juan","san juan:sanjuan"))
+lapply(changeNames, function(x) {
+  set(adj, i = which(adj[["State.Province"]] == x[[1]] & adj[["County"]] == x[[2]]), 
+      "County", x[[3]])
+  })
+# add the adjName column
 adj[, `:=`(region = State.Province,
           subregion = County, 
           adjName = paste(adj$State.Province, adj$County, sep = ","))]
@@ -56,7 +60,7 @@ getCountData <- function(date){
 
 
 #test code
-
+getCountData("2015-04-24")
 #adj[adjName == getCountData("2015-04-24")$names]
 #test<-unique(adj[Country == "UNITED STATES" & 
 #              State.Province != "alaska" & 
