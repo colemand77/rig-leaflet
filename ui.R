@@ -14,7 +14,10 @@ shinyUI(
                     max = max(rigCountDates), 
                     value = max(rigCountDates),
                     animate = TRUE),
-        textOutput("DateUsed")
+        textOutput("DateUsed"),
+        textOutput("zoom"),
+        textOutput("bounds"),
+        textOutput("center")
         
         ),
       mainPanel(
