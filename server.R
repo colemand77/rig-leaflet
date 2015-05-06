@@ -24,11 +24,13 @@ shinyServer(function(input, output, session) {
   output$myMap <- renderLeaflet(leaflet(data = mapStates) %>% addTiles() %>%
                                   addPolygons(fillColor = "lightgrey", stroke = TRUE, 
                                               color = "white", weight = 2) %>%
-                                  addPolygons(data = used_Data(), fillColor = "red", 
-                                              stroke = TRUE, color = "white", 
-                                              weight = 1))
+                                  addPolygons(data = used_Data(), fillColor = pal(used_Data()$count), 
+                                              fillOpacity = 0.75, stroke = TRUE, color = "white", 
+                                              weight = 1, popup = as.character(used_Data()$count)))
                                 
   output$DateUsed <- renderText(usedDate())
   
 })
+
+
 # Look at leafletproxy!? might be a faster way of rendering changes to the county polygons?
