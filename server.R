@@ -20,14 +20,13 @@ shinyServer(function(input, output, session) {
 #    addPolygons(fillColor = "lightgrey", stroke = TRUE, color = "white", weight = 2) %>%
 #    addPolygons(data = used_Data(), fillColor = "red", stroke = FALSE)
   
-  #output$myMap <- renderLeaflet(thismap)
-  output$myMap <- renderLeaflet(leaflet(data = mapStates) %>% addTiles() %>%
+output$myMap <- renderLeaflet(leaflet(data = mapStates) %>% addTiles() %>%
                                   addPolygons(fillColor = "lightgrey", stroke = TRUE, 
                                               color = "white", weight = 2) %>%
                                   addPolygons(data = used_Data(), fillColor = pal(used_Data()$count), 
                                               fillOpacity = 0.75, stroke = TRUE, color = "white", 
                                               weight = 1, popup = as.character(used_Data()$count)))
-                                
+
   output$DateUsed <- renderText(usedDate())
   
 })

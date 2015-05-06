@@ -12,10 +12,10 @@ adj<- as.data.table(raw)
 adj[, `:=`(PublishDate = as.Date(PublishDate, format = "%m/%d/%Y"),
            State.Province = tolower(State.Province),
            County = tolower(County))]
-set(adj, i = NULL, j = "County", value = gsub(".","",adj[["County"]],fixed = TRUE))
+
 
 # modify county names to be consistent with map names
-changeNames <- list(c("louisiana", "st.martin", "st martin:north"), 
+changeNames <- list(c("louisiana", "st. martin", "st martin:north"), 
                     c("texas", "galveston", "galveston:main"),
                     c("florida", "okaloosa", "okaloosa:main"),
                     c("north carolina", "currituck", "currituck:main"),
@@ -26,6 +26,8 @@ lapply(changeNames, function(x) {
   set(adj, i = which(adj[["State.Province"]] == x[[1]] & adj[["County"]] == x[[2]]), 
       "County", x[[3]])
   })
+set(adj, i = NULL, j = "County", value = gsub(".","",adj[["County"]],fixed = TRUE))
+
 # add the adjName column
 adj[, `:=`(region = State.Province,
           subregion = County, 
@@ -61,9 +63,10 @@ getCountData <- function(date){
 
 #test code
 getCountData("2015-04-24")
+
 #adj[adjName == getCountData("2015-04-24")$names]
 #test<-unique(adj[Country == "UNITED STATES" & 
-#              State.Province != "alaska" & 
+##              State.Province != "alaska" & 
 #              State.Province != "hawaii" &
 #              Location == "Land",
 #            .(adjName,sum(RigCount)), by = .(adjName)])
@@ -78,4 +81,5 @@ getCountData("2015-04-24")
 #lapply(test$adjName, function(x) {
 #  print(map("county", region = x, exact = TRUE, plot = FALSE))
 #})
+
 
