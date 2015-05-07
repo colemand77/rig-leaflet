@@ -27,21 +27,23 @@ shinyServer(function(input, output, session) {
       xlim = c(input$myMap_bounds$west, input$myMap_bounds$east)
       )}
   })
+  basins <- reactive(input$basin_group)
   
   #pick up the date from the input sheet
   usedDate <- reactive({names(rigCountDates[input$dates])})
   #subset the data as only the counties in the selected area
-  used_Data <- reactive({getCountData(usedDate(), 
+  used_Data <- reactive({getCountData(usedDate(), Basin_select = basins(), 
                                       xlim = as.numeric(desc()$xlim), 
                                       ylim = as.numeric(desc()$ylim))})
   
   #function to return the map object with the rig counts for correct date
-  getCountData <- function(date, xlim = c(-130,-60), ylim = c(25,50)){
+  getCountData <- function(date, Basin_select, xlim = c(-130,-60), ylim = c(25,50)){
     temp <- adj[PublishDate == as.Date(date),]
     temp_County_names <- unique(temp[Country == "UNITED STATES" & 
                                        State.Province != "alaska" & 
                                        State.Province != "hawaii" &
-                                       Location == "Land",
+                                       Location == "Land" &
+                                       Basin %in% Basin_select,
                                      .(count = sum(RigCount)),by = adjName])
     tempCountyMap <- map("county", region = temp_County_names$adjName,
                          plot=FALSE, exact = TRUE, fill = TRUE, 
@@ -60,6 +62,7 @@ shinyServer(function(input, output, session) {
 #all other reactives are protected by isolate()
 output$myMap <- renderLeaflet({
   input$dates
+  input$basin_group
   leaflet(data = mapStates) %>% 
     addTiles() %>%
     # setView(lat = desc()$lat, lng = desc()$lng, zoom = desc()$zoom) %>%
@@ -74,6 +77,7 @@ output$myMap <- renderLeaflet({
   output$bounds <- renderText(bounds()$north)  
   output$center <- renderText(c(desc()$cent_lat, desc()$cent_lng))
   output$countyList <- renderText(used_Data()$names)
+  output$choseBasin <- renderText(basins())
   output$dygraph <- renderDygraph({
     graph_rigcount(used_Data()$names)
   })
