@@ -9,43 +9,72 @@ library(dplyr)
 #variables to be set outside the reactive loop
 mapStates <- map("state", fill = TRUE, plot = FALSE)
 
-
-
-
 shinyServer(function(input, output, session) {
-  usedDate <- reactive({names(rigCountDates[input$dates])})
-  used_Data <- reactive({getCountData(usedDate())})
-  zoom <- reactive({input$myMap_zoom})
-  bounds <- reactive({input$myMap_bounds})
 
+  #desc returns the details of the active map frame / center / zoom limits
+  desc <- reactive({
+    if(is.null(input$myMap_bounds)){
+      list(
+        ylim = c(25,50),
+        xlim = c(-130,-60))
+      } else {
+    list(
+      cent_lat = mean(c(input$myMap_bounds$south, input$myMap_bounds$north)),
+      cent_lng = mean(c(input$myMap_bounds$west, input$myMap_bounds$east)),
+      bounds = input$myMap_bounds,
+      zoom = input$myMap_zoom,
+      ylim = c(input$myMap_bounds$south, input$myMap_bounds$north),
+      xlim = c(input$myMap_bounds$west, input$myMap_bounds$east)
+      )}
+  })
   
+  #pick up the date from the input sheet
+  usedDate <- reactive({names(rigCountDates[input$dates])})
+  #subset the data as only the counties in the selected area
+  used_Data <- reactive({getCountData(usedDate(), 
+                                      xlim = as.numeric(desc()$xlim), 
+                                      ylim = as.numeric(desc()$ylim))})
+  
+  #function to return the map object with the rig counts for correct date
+  getCountData <- function(date, xlim = c(-130,-60), ylim = c(25,50)){
+    temp <- adj[PublishDate == as.Date(date),]
+    temp_County_names <- unique(temp[Country == "UNITED STATES" & 
+                                       State.Province != "alaska" & 
+                                       State.Province != "hawaii" &
+                                       Location == "Land",
+                                     .(count = sum(RigCount)),by = adjName])
+    tempCountyMap <- map("county", region = temp_County_names$adjName,
+                         plot=FALSE, exact = TRUE, fill = TRUE, 
+                         xlim = xlim, ylim = ylim)
+    
+    tempCountyMap$count <- temp_County_names$count
+    return(tempCountyMap)
+  }
   
 #  thismap <- leaflet(data = mapStates) %>% addTiles() %>%
 #    addPolygons(fillColor = "lightgrey", stroke = TRUE, color = "white", weight = 2) %>%
 #    addPolygons(data = used_Data(), fillColor = "red", stroke = FALSE)
   
-output$myMap <- renderLeaflet(leaflet(data = mapStates) %>% addTiles() %>%
-                                  addPolygons(fillColor = "lightgrey", stroke = TRUE, 
-                                              color = "white", weight = 2) %>%
-                                  addPolygons(data = used_Data(), fillColor = pal(used_Data()$count), 
-                                              fillOpacity = 0.75, stroke = TRUE, color = "white", 
-                                              weight = 1, popup = as.character(used_Data()$count)))# %>%
-                                #setView(lng = input$myMap_center$lng, lat = input$myMap_center$lat, zoom = zoom()))
+
+#Render the leaflet map; this is only updated when the input$dates is changed,
+#all other reactives are protected by isolate()
+output$myMap <- renderLeaflet({
+  input$dates
+  leaflet(data = mapStates) %>% 
+    addTiles() %>%
+    # setView(lat = desc()$lat, lng = desc()$lng, zoom = desc()$zoom) %>%
+    addPolygons(fillColor = "lightgrey", stroke = TRUE, 
+                color = "white", weight = 2) %>%
+    addPolygons(data = isolate(used_Data()), fillColor = pal(isolate(used_Data()$count)), 
+                fillOpacity = 0.75, stroke = TRUE, color = "white", 
+                weight = 1, popup = as.character(isolate(used_Data()$count)))
+  })
 
   output$DateUsed <- renderText(usedDate())
-  output$zoom <- renderText(zoom())
-  output$bounds <- renderText(bounds()$north)
+  output$bounds <- renderText(bounds()$north)  
+  output$center <- renderText(c(desc()$cent_lat, desc()$cent_lng))
+  output$countyList <- renderText(used_Data()$names)
 
-  desc <- reactive({
-    if(is.null(input$myMap_bounds))
-      return(list())
-    list(
-      lat = mean(c(input$myMap_bounds$north, input$myMap_bounds$south)),
-      lng = mean(c(input$myMap_bounds$west, input$myMap_bounds$east)),
-      zoom = input$myMap_zoom
-    )
-  })
-  output$center <- renderText(c(desc()$lat, desc()$lng))
 
 
 })

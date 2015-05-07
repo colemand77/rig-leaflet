@@ -15,10 +15,7 @@ shinyUI(
                     value = max(rigCountDates),
                     animate = TRUE),
         textOutput("DateUsed"),
-        textOutput("zoom"),
-        textOutput("bounds"),
-        textOutput("center")
-        
+        textOutput("countyList")        
         ),
       mainPanel(
                leafletOutput("myMap")

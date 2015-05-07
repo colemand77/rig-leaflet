@@ -43,26 +43,13 @@ rigCountDates <- 1:length(unique(adj[,PublishDate]))
 names(rigCountDates) <-  unique(adj[,PublishDate])
 
 #note I used approximate matching here. THis could be a problem going forward.
-RigCountyMap <- map("county", region  = rig_County_names,
-                 plot=FALSE, exact = FALSE, fill = TRUE)
-
-getCountData <- function(date){
-  temp <- adj[PublishDate == as.Date(date),]
-  temp_County_names <- unique(temp[Country == "UNITED STATES" & 
-                                     State.Province != "alaska" & 
-                                     State.Province != "hawaii" &
-                                     Location == "Land",
-                                         .(count = sum(RigCount)),by = adjName])
-  tempCountyMap <- map("county", region = temp_County_names$adjName,
-                      plot=FALSE, exact = TRUE, fill = TRUE)
-  tempCountyMap$count <- temp_County_names$count
-  #tempCountyMap$col <- pal(temp_County_names$RigCount)
-  return(tempCountyMap)
-}
-
+#RigCountyMap <- map("county", region  = rig_County_names,
+#                 plot=FALSE, exact = FALSE, fill = TRUE)
 
 #test code
-getCountData("2015-04-24")
+getCountData("2015-04-24", xlim = c(-100,-90), ylim = c(35,36))
+test<-getCountData("2015-04-24", xlim = c(-100,-99), ylim = c(35,36))
+
 
 #adj[adjName == getCountData("2015-04-24")$names]
 #test<-unique(adj[Country == "UNITED STATES" & 
