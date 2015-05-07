@@ -1,7 +1,7 @@
 library(shiny)
 library(leaflet)
 source("rigData.R")
-
+source("graph_function.R")
 basinList <- unique(adj[,Basin])
 
 shinyUI(
@@ -18,7 +18,8 @@ shinyUI(
         textOutput("countyList")        
         ),
       mainPanel(
-               leafletOutput("myMap")
+               leafletOutput("myMap"),
+               dygraphOutput("dygraph")
       )
       )
   )

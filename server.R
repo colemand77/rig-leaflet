@@ -74,7 +74,9 @@ output$myMap <- renderLeaflet({
   output$bounds <- renderText(bounds()$north)  
   output$center <- renderText(c(desc()$cent_lat, desc()$cent_lng))
   output$countyList <- renderText(used_Data()$names)
-
+  output$dygraph <- renderDygraph({
+    graph_rigcount(used_Data()$names)
+  })
 
 
 })
