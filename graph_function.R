@@ -89,5 +89,5 @@ build_Criteria <- function(Basin = NULL,
 ##test2
 #testinput <- "WellDepth"
 #test3 <- spread_(test2, testinput, "RigCount", fill = 0)
-as.xts(test3[,!"PublishDate",with = FALSE], order.by = test3$PublishDate)
+#as.xts(test3[,!"PublishDate",with = FALSE], order.by = test3$PublishDate)
 
