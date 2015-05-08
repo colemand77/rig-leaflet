@@ -44,13 +44,22 @@ shinyUI(
           condition = "'WellType_select' %in% input.UI_Checkbox",
           uiOutput("welltype")),
         
-        textOutput("DateUsed"),
-        textOutput("choseBasin"),
-        textOutput("countyList")      
+        textOutput("DateUsed")
+        #textOutput("choseBasin"),
+       # textOutput("countyList")      
         
         ),
       mainPanel(
                leafletOutput("myMap"),
+               selectInput("graph_group", label = "group chart by",
+                           choices = list(
+                             "Basin" = "Basin",
+                             "Drill For" = "DrillFor",
+                             "Trajectory" = "Trajectory",
+                             "Well Type" = "WellType",
+                             "Well Depth" = "WellDepth",
+                             "none" = "none"),
+                           selected = "none"),
                dygraphOutput("dygraph")
       )
       )

@@ -1,14 +1,33 @@
 library(dygraphs)
 library(xts)
+library(tidyr)
 
 countyList_in_scope <- function(xlim, ylim){
   map("county",xlim = xlim, ylim = ylim, plot = FALSE, fill = TRUE)$names
 }
 
-ts_rigcount <- function(countynames, ...){
+
+groupingString <- function(group){
+  if (is.null(group)) return("list(PublishDate)")
+  if(group == "none") return("list(PublishDate)") else {
+    paste0("list(PublishDate,", group,")")
+  }
+}
+
+groupingString("Thisthing")
+
+ts_rigcount <- function(countynames, group, ...){
+  
   paramstring <- build_Criteria(...)
-  temp <- adj[adjName %in% countynames & eval(parse(text = paramstring)),.(RigCount = sum(RigCount)), by = .(PublishDate)]
+  temp <- adj[adjName %in% countynames & eval(parse(text = paramstring)),
+              list(RigCount = sum(RigCount)), 
+              by = eval(parse(text = groupingString(group)))]
+  if(group != "none"){
+    temp <- spread_(temp, group, "RigCount", fill = 0)
+    as.xts(temp[,!"PublishDate", with = FALSE], order.by = temp$PublishDate)
+  } else{
   as.xts(temp$RigCount, order.by = temp$PublishDate)
+  }
 }
 
 # will have to add the build_Criteria() function at some point,
@@ -66,4 +85,9 @@ build_Criteria <- function(Basin = NULL,
 
 #test <- build_Criteria(Basin = c("Eagle Ford", "Permian"), DrillFor = "Gas")
 #test
-#adj[eval(parse(text = test))]
+#test2 <- adj[eval(parse(text = test)),.(RigCount = sum(RigCount)), by = .(PublishDate, WellDepth)]
+##test2
+#testinput <- "WellDepth"
+#test3 <- spread_(test2, testinput, "RigCount", fill = 0)
+as.xts(test3[,!"PublishDate",with = FALSE], order.by = test3$PublishDate)
+
