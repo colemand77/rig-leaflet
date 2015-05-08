@@ -35,7 +35,7 @@ set(adj, i = which(adj[["Basin"]] == "Dj-Niobrara"), j = "Basin",
 adj[, `:=`(region = State.Province,
           subregion = County, 
           adjName = paste(adj$State.Province, adj$County, sep = ","))]
-
+str(adj)
 rig_County_names <- unique(adj[Country == "UNITED STATES" & 
                                  State.Province != "alaska" & 
                                  Location == "Land" & 

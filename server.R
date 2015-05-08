@@ -35,6 +35,8 @@ shinyServer(function(input, output, session) {
   used_Data <- reactive({getCountData(usedDate(), Basin_select = basins(), 
                                       xlim = as.numeric(desc()$xlim), 
                                       ylim = as.numeric(desc()$ylim))})
+  all_county_visible <- reactive(map("county", plot = FALSE, xlim = desc()$xlim, ylim = desc()$ylim)$names)
+  
   
   #function to return the map object with the rig counts for correct date
   getCountData <- function(date, Basin_select, xlim = c(-130,-60), ylim = c(25,50)){
@@ -79,7 +81,7 @@ output$myMap <- renderLeaflet({
   output$countyList <- renderText(used_Data()$names)
   output$choseBasin <- renderText(basins())
   output$dygraph <- renderDygraph({
-    graph_rigcount(used_Data()$names)
+    graph_rigcount(all_county_visible())
   })
 })
 
