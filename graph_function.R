@@ -6,14 +6,15 @@ countyList_in_scope <- function(xlim, ylim){
 }
 
 ts_rigcount <- function(countynames, ...){
-  temp <- adj[adjName %in% countynames,.(RigCount = sum(RigCount)), by = .(PublishDate)]
+  paramstring <- build_Criteria(...)
+  temp <- adj[adjName %in% countynames & eval(parse(text = paramstring)),.(RigCount = sum(RigCount)), by = .(PublishDate)]
   as.xts(temp$RigCount, order.by = temp$PublishDate)
 }
 
 # will have to add the build_Criteria() function at some point,
 #but for now this will work
-graph_rigcount <- function(countynames){
-  dygraph(ts_rigcount(countynames)) %>% dyRangeSelector()
+graph_rigcount <- function(countynames,...){
+  dygraph(ts_rigcount(countynames,...)) %>% dyRangeSelector()
 }
 
 #way to build functions into the criteria; need to have the checkboxes
@@ -63,15 +64,6 @@ build_Criteria <- function(Basin = NULL,
 }
 
 
-
-test <- function(Basin = c(1,2,3), something = c(3,4,5)){
-  grp_fmt(Basin = Basin)
-}
-
-
-
-test()
-
-test <- build_Criteria(Basin = c("Eagle Ford", "Permian"), DrillFor = "Gas")
-test
-adj[eval(parse(text = test))]
+#test <- build_Criteria(Basin = c("Eagle Ford", "Permian"), DrillFor = "Gas")
+#test
+#adj[eval(parse(text = test))]
