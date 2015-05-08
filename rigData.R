@@ -27,6 +27,9 @@ lapply(changeNames, function(x) {
       "County", x[[3]])
   })
 set(adj, i = NULL, j = "County", value = gsub(".","",adj[["County"]],fixed = TRUE))
+set(adj, i = which(adj[["Basin"]] == "Dj-Niobrara"), j = "Basin", 
+    value = "DJ-Niobrara")
+
 
 # add the adjName column
 adj[, `:=`(region = State.Province,

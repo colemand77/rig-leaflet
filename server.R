@@ -81,8 +81,6 @@ output$myMap <- renderLeaflet({
   output$dygraph <- renderDygraph({
     graph_rigcount(used_Data()$names)
   })
-
-
 })
 
 
