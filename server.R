@@ -10,7 +10,82 @@ library(dplyr)
 mapStates <- map("state", fill = TRUE, plot = FALSE)
 
 shinyServer(function(input, output, session) {
+  #all the UI rendering stuff
+  output$depth <- renderUI({
+    if(is.null(input$UI_Checkbox))
+      return()
+    if("Depth_select" %in% input$UI_Checkbox)
+      checkboxGroupInput("depth","Depth",
+                         choices = c("under 5k" = "<5k",
+                                     "5-10k" = "5k-10k",
+                                     "10-15k" = "10k-15k",
+                                     "more than 15k" = ">15k",
+                                     "unknown" = "N/A"),
+                         selected = c("<5k","5k-10k","10k-15k",">15k","N/A"))
+  })
+  output$drillfor <- renderUI({ 
+    if(is.null(input$UI_Checkbox))
+      return()
+    if("DrillFor_select" %in% input$UI_Checkbox)
+      checkboxGroupInput("drillfor","DrillFor",
+                         choices = c("Oil" = "Oil",
+                                     "Gas" = "Gas",
+                                     "Miscellaneous" = "Miscellaneous"),
+                         selected = c("Oil","Gas","Miscellaneous"))
+  })
+  output$basin <- renderUI({ 
+    if(is.null(input$UI_Checkbox))
+      return()
+    if("Basin_select" %in% input$UI_Checkbox)
+      checkboxGroupInput("basin","Basin",
+                         choices = c("Permian" = "Permian",
+                                     "Williston" = "Williston",
+                                     "Utica" = "Utica",
+                                     "Grantite Wash" = "Granite Wash",
+                                     "Haynesville" = "Haynesville",
+                                     "Cana Woodford" = "Cana Woodford",
+                                     "Marcellus" = "Marcellus",
+                                     "DJ-Niobrara" = "DJ-Niobrara",
+                                     "Eagle Ford" = "Eagle Ford",
+                                     "Ardmore Woodford" = "Ardmore Woodford",
+                                     "Barnett" = "Barnett",
+                                     "Mississippian" = "Mississippian",
+                                     "Arkoma Woodford" = "Arkoma Woodford",
+                                     "Fayetteville" = "Fayetteville",
+                                     "Other" = "Other"),
+                         selected = c("Permian","Williston","Utica","Granite Wash",
+                                      "Haynesville","Cana Woodford","Marcellus",
+                                      "DJ-Niobrara", "Eagle Ford","Ardmore Woodford",
+                                      "Barnett","Mississippian","Arkoma Woodford",
+                                      "Fayetteville","Other"))
+  })
+  output$trajectory <- renderUI({ 
+    if(is.null(input$UI_Checkbox))
+      return()
+    if("Trajectory_select" %in% input$UI_Checkbox)
+      checkboxGroupInput("trajectory","Trajectory",
+                         choices = c("Horizontal" = "Horizontal",
+                                     "Vertical" = "Vertical",
+                                     "Directional" = "Directional",
+                                     "Other" = "Other"),
+                         selected = c("Horizontal","Vertical","Directional", "Other"))
+  })
+  output$welltype <- renderUI({ 
+    if(is.null(input$UI_Checkbox))
+      return()
+    if("WellType_select" %in% input$UI_Checkbox)
+      checkboxGroupInput("welltype","Well Type",
+                         choices = c("Development" = "Development",
+                                     "Exploration" = "Exploration",
+                                     "Infill" = "Infill",
+                                     "Other" = "Other"),
+                         selected = c("Development","Exploration","Infill","Other"))  
+  })
 
+  str(adj)
+  
+  unique(adj[,DrillFor])
+  #acutal calculation stuff
   #desc returns the details of the active map frame / center / zoom limits
   desc <- reactive({
     if(is.null(input$myMap_bounds)){
@@ -27,8 +102,27 @@ shinyServer(function(input, output, session) {
       xlim = c(input$myMap_bounds$west, input$myMap_bounds$east)
       )}
   })
-  basins <- reactive(input$basin_group)
-  
+
+#define reactives to pick up UI Interface
+  basins <- reactive(if(is.null(input$basin)){ c("Permian","Williston","Utica","Granite Wash",
+                                                "Haynesville","Cana Woodford","Marcellus",
+                                                "DJ-Niobrara", "Eagle Ford","Ardmore Woodford",
+                                                "Barnett","Mississippian","Arkoma Woodford",
+                                                "Fayetteville","Other")
+  } else input$basin)
+  depth <- reactive(if(is.null(input$depth)){
+    c("<5k","5k-10k","10k-15k",">15k","N/A")
+    }else input$depth)
+  trajectory <- reactive(if(is.null(input$trajectory)){
+    c("Horizontal","Vertical","Directional", "Other")
+  } else input$trajectory)
+  drillfor <- reactive(if(is.null(input$drillfor)){
+    c("Oil","Gas","Miscellaneous")
+  } else input$drillfor)
+  welltype <- reactive(if(is.null(input$welltype)){
+    c("Development","Exploration","Infill","Other")
+  } else input$welltype)
+
   #pick up the date from the input sheet
   usedDate <- reactive({names(rigCountDates[input$dates])})
   #subset the data as only the counties in the selected area
@@ -64,7 +158,7 @@ shinyServer(function(input, output, session) {
 #all other reactives are protected by isolate()
 output$myMap <- renderLeaflet({
   input$dates
-  input$basin_group
+  basins()
   leaflet(data = mapStates) %>% 
     addTiles() %>%
     # setView(lat = desc()$lat, lng = desc()$lng, zoom = desc()$zoom) %>%
@@ -83,6 +177,7 @@ output$myMap <- renderLeaflet({
   output$dygraph <- renderDygraph({
     graph_rigcount(all_county_visible(), Basin = basins())
   })
+
 })
 
 

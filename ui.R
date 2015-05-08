@@ -14,28 +14,35 @@ shinyUI(
                     max = max(rigCountDates), 
                     value = max(rigCountDates),
                     animate = TRUE),
-        checkboxGroupInput("basin_group",
-          label = h3("Basins"),
-          choices = list("Permian" = "Permian",
-                         "Utica" = "Utica",
-                         "Granite Wash" = "Granite Wash",
-                         "Haynesville" = "Haynesville",
-                         "Cana Woodford" = "Cana Woodford",
-                         "Marcellus" = "Marcellus",
-                         "DJ-Niobrara" = "DJ-Niobrara",
-                         "Eagle Ford" = "Eagle Ford",
-                         "Ardmore Woodford" = "Ardmore Woodford",
-                         "Barnett" = "Barnett",
-                         "Mississippian" = "Mississippian",
-                         "Williston" = "Williston",
-                         "Arkoma Woodford" = "Arkoma Woodford",
-                         "Fayetteville" = "Fayetteville",
-                         "Other" = "Other"),
-          selected = c("Permian","Utica","Granite Wash","Haynesville","Cana Woodford",
-                       "Marcellus","DJ-Niobrara","Eagle Ford","Ardmore Woodford",
-                       "Barnett","Mississippian","Williston","Arkoma Woodford",
-                       "Fayetteville","Other")
-        ),
+        
+        checkboxGroupInput("UI_Checkbox", 
+                           label = "Filter By:",
+                           choices = list(
+                             "Basin Selector" = "Basin_select", 
+                             "Well Depth Selector" = "Depth_select",
+                             "Drilling For " = "DrillFor_select",
+                             "Direction Type" = "Trajectory_select",
+                             "Well Type" = "WellType_select"
+                           )),
+        conditionalPanel(
+          condition = "'Basin_select' %in% input.UI_Checkbox",
+          uiOutput("basin")),
+        
+        conditionalPanel(
+          condition = "'Depth_select' %in% input.UI_Checkbox",
+          uiOutput("depth")),
+        
+        conditionalPanel(
+          condition = "'DrillFor_select' %in% input.UI_Checkbox",
+          uiOutput("drillfor")),
+        
+        conditionalPanel(
+          condition = "'Trajectory_select' %in% input.UI_Checkbox",
+          uiOutput("trajectory")),
+        
+        conditionalPanel(
+          condition = "'WellType_select' %in% input.UI_Checkbox",
+          uiOutput("welltype")),
         
         textOutput("DateUsed"),
         textOutput("choseBasin"),
