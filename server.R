@@ -82,9 +82,6 @@ shinyServer(function(input, output, session) {
                          selected = c("Development","Exploration","Infill","Other"))  
   })
 
-  str(adj)
-  
-  unique(adj[,DrillFor])
   #acutal calculation stuff
   #desc returns the details of the active map frame / center / zoom limits
   desc <- reactive({
@@ -126,20 +123,34 @@ shinyServer(function(input, output, session) {
   #pick up the date from the input sheet
   usedDate <- reactive({names(rigCountDates[input$dates])})
   #subset the data as only the counties in the selected area
-  used_Data <- reactive({getCountData(usedDate(), Basin_select = basins(), 
+  used_Data <- reactive({getCountData(usedDate(), 
+                                      Basin_select = basins(),
+                                      Depth_select = depth(),
+                                      Trajectory_select = trajectory(),
+                                      DrillFor_select = drillfor(),
+                                      WellType_select = welltype(),
                                       xlim = as.numeric(desc()$xlim), 
                                       ylim = as.numeric(desc()$ylim))})
   all_county_visible <- reactive(map("county", plot = FALSE, xlim = desc()$xlim, ylim = desc()$ylim)$names)
   
   
   #function to return the map object with the rig counts for correct date
-  getCountData <- function(date, Basin_select, xlim = c(-130,-60), ylim = c(25,50)){
+  getCountData <- function(date, Basin_select, 
+                           Depth_select, 
+                           Trajectory_select,
+                           DrillFor_select, 
+                           WellType_select,
+                           xlim = c(-130,-60), ylim = c(25,50)){
     temp <- adj[PublishDate == as.Date(date),]
     temp_County_names <- unique(temp[Country == "UNITED STATES" & 
                                        State.Province != "alaska" & 
                                        State.Province != "hawaii" &
                                        Location == "Land" &
-                                       Basin %in% Basin_select,
+                                       Basin %in% Basin_select &
+                                       WellDepth %in% Depth_select &
+                                       Trajectory %in% Trajectory_select &
+                                       DrillFor %in% DrillFor_select &
+                                       WellType %in% WellType_select,
                                      .(count = sum(RigCount)),by = adjName])
     tempCountyMap <- map("county", region = temp_County_names$adjName,
                          plot=FALSE, exact = TRUE, fill = TRUE, 
@@ -159,6 +170,10 @@ shinyServer(function(input, output, session) {
 output$myMap <- renderLeaflet({
   input$dates
   basins()
+  depth()
+  trajectory()
+  drillfor()
+  welltype()
   leaflet(data = mapStates) %>% 
     addTiles() %>%
     # setView(lat = desc()$lat, lng = desc()$lng, zoom = desc()$zoom) %>%
