@@ -14,3 +14,10 @@ graph_rigcount <- function(countynames){
   dygraph(ts_rigcount(countynames)) %>% dyRangeSelector()
 }
 
+fun1 <- function(a = 3, b = 5, ...){
+  lapply(list(...), function(x){
+    return(names(x))    
+  })
+}
+
+fun1(,one = 3, four = 5)
