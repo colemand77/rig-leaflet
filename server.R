@@ -190,7 +190,12 @@ output$myMap <- renderLeaflet({
   output$countyList <- renderText(used_Data()$names)
   output$choseBasin <- renderText(basins())
   output$dygraph <- renderDygraph({
-    graph_rigcount(all_county_visible(), Basin = basins())
+    graph_rigcount(all_county_visible(), 
+                   Basin = basins(), 
+                   DrillFor = drillfor(),
+                   Trajectory = trajectory(),
+                   WellType = welltype(),
+                   WellDepth = depth())
   })
 
 })
