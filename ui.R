@@ -41,8 +41,8 @@ shinyUI(
                       ),
         
         absolutePanel(id = "graph", class = "panel panel-default", fixed = FALSE,
-                      draggable = FALSE, top = "auto", left = 20, right = "auto", bottom = 20,
-                      width = 600, #height = 400,
+                      draggable = FALSE, top = "auto", left = 20, right = "auto", bottom = 5,
+                      #width = 600, #height = 400,
                       h4("graph output"),
                       selectInput("graph_group", label = "",
                                   choices = list(
@@ -57,7 +57,7 @@ shinyUI(
                                    c("Stacked" = "Stacked",
                                      "Linear" = "Linear"),
                                    selected = "Linear", inline = TRUE),
-                      dygraphOutput("dygraph", width = "100%", height = "400px")
+                      dygraphOutput("dygraph", width = "500px", height = "500px")
                       )
       )
     )
