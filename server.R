@@ -12,10 +12,6 @@ mapStates <- map("state", fill = TRUE, plot = FALSE)
 shinyServer(function(input, output, session) {
   #all the UI rendering stuff
   
-  
-  
-  
-  
   output$depth <- renderUI({
       checkboxGroupInput("depth","Depth",
                          choices = c("under 5k" = "<5k",
