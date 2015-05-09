@@ -24,34 +24,20 @@ shinyUI(
                              "Direction Type" = "Trajectory_select",
                              "Well Type" = "WellType_select"
                            )),
-        
+# to get it to work better on the shiny server        
         radioButtons("details", "Show Breakdown:",
                      c("All" = "True",
                        "None" = "False"),
-                     selected = "True"),
-        
-            
-        
+                     selected = "False"),
+                
         conditionalPanel(
-          condition = "'Basin_select' %in% input.UI_Checkbox",
-          uiOutput("basin")),
-        
-        conditionalPanel(
-          condition = "'Depth_select' %in% input.UI_Checkbox",
-          uiOutput("depth")),
-        
-        conditionalPanel(
-          condition = "'DrillFor_select' %in% input.UI_Checkbox",
-          uiOutput("drillfor")),
-        
-        conditionalPanel(
-          condition = "'Trajectory_select' %in% input.UI_Checkbox",
-          uiOutput("trajectory")),
-        
-        conditionalPanel(
-          condition = "'WellType_select' %in% input.UI_Checkbox",
+          condition = "input.details == 'True'",
+          uiOutput("basin"),
+          uiOutput("depth"),
+          uiOutput("drillfor"),
+          uiOutput("trajectory"),
           uiOutput("welltype")),
-        
+            
         textOutput("DateUsed")
         #textOutput("choseBasin"),
        # textOutput("countyList")      
