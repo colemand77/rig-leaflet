@@ -12,21 +12,30 @@ adj<- as.data.table(raw)
 adj[, `:=`(PublishDate = as.Date(PublishDate, format = "%m/%d/%Y"),
            State.Province = tolower(State.Province),
            County = tolower(County))]
-adj[State.Province == "louisiana" & County == "st. martin", County := "st martin:north"]
-adj[State.Province == "texas" & County == "galveston", County := "galveston:main"]
-adj[State.Province == "florida" & County == "okaloosa", County := "okaloosa:main"]
-adj[State.Province == "north carolina" & County == "currituck", County :=" currituck:main"]
-adj[State.Province == "virginia" & County == "accomack", County := "accomack:main"]
-adj[State.Province == "washington" & County == "pierce", County := "pierce:main"]
-adj[State.Province == "washington" & County == "san juan", County := "san juan:san juan island"]
-set(adj, i = NULL, j = "County", value = gsub(".","",adj[["County"]],fixed = TRUE))
-# this is roughly 2x faster:  system.time(set(adj, i = which(adj[["State.Province"]] == "washington" & adj[["County"]] == "san juan"), "County", "san juan:san juan island"))
-adj
 
+
+# modify county names to be consistent with map names
+changeNames <- list(c("louisiana", "st. martin", "st martin:north"), 
+                    c("texas", "galveston", "galveston:main"),
+                    c("florida", "okaloosa", "okaloosa:main"),
+                    c("north carolina", "currituck", "currituck:main"),
+                    c("virginia", "accomack","accomack:main"),
+                    c("washington","pierce","pierce:main"),
+                    c("washington","san juan","san juan:sanjuan"))
+lapply(changeNames, function(x) {
+  set(adj, i = which(adj[["State.Province"]] == x[[1]] & adj[["County"]] == x[[2]]), 
+      "County", x[[3]])
+  })
+set(adj, i = NULL, j = "County", value = gsub(".","",adj[["County"]],fixed = TRUE))
+set(adj, i = which(adj[["Basin"]] == "Dj-Niobrara"), j = "Basin", 
+    value = "DJ-Niobrara")
+
+
+# add the adjName column
 adj[, `:=`(region = State.Province,
           subregion = County, 
           adjName = paste(adj$State.Province, adj$County, sep = ","))]
-
+str(adj)
 rig_County_names <- unique(adj[Country == "UNITED STATES" & 
                                  State.Province != "alaska" & 
                                  Location == "Land" & 
@@ -37,29 +46,17 @@ rigCountDates <- 1:length(unique(adj[,PublishDate]))
 names(rigCountDates) <-  unique(adj[,PublishDate])
 
 #note I used approximate matching here. THis could be a problem going forward.
-RigCountyMap <- map("county", region  = rig_County_names,
-                 plot=FALSE, exact = FALSE, fill = TRUE)
-
-getCountData <- function(date){
-  temp <- adj[PublishDate == as.Date(date),]
-  temp_County_names <- unique(temp[Country == "UNITED STATES" & 
-                                     State.Province != "alaska" & 
-                                     State.Province != "hawaii" &
-                                     Location == "Land",
-                                         .(count = sum(RigCount)),by = adjName])
-  tempCountyMap <- map("county", region = temp_County_names$adjName,
-                      plot=FALSE, exact = TRUE, fill = TRUE)
-  tempCountyMap$count <- temp_County_names$count
-  #tempCountyMap$col <- pal(temp_County_names$RigCount)
-  return(tempCountyMap)
-}
-
+#RigCountyMap <- map("county", region  = rig_County_names,
+#                 plot=FALSE, exact = FALSE, fill = TRUE)
 
 #test code
+getCountData("2015-04-24", xlim = c(-100,-90), ylim = c(35,36))
+test<-getCountData("2015-04-24", xlim = c(-100,-99), ylim = c(35,36))
+
 
 #adj[adjName == getCountData("2015-04-24")$names]
 #test<-unique(adj[Country == "UNITED STATES" & 
-#              State.Province != "alaska" & 
+##              State.Province != "alaska" & 
 #              State.Province != "hawaii" &
 #              Location == "Land",
 #            .(adjName,sum(RigCount)), by = .(adjName)])
@@ -74,4 +71,5 @@ getCountData <- function(date){
 #lapply(test$adjName, function(x) {
 #  print(map("county", region = x, exact = TRUE, plot = FALSE))
 #})
+
 
