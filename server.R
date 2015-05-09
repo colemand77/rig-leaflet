@@ -11,10 +11,12 @@ mapStates <- map("state", fill = TRUE, plot = FALSE)
 
 shinyServer(function(input, output, session) {
   #all the UI rendering stuff
+  
+  
+  
+  
+  
   output$depth <- renderUI({
-    if(is.null(input$UI_Checkbox))
-      return()
-    if("Depth_select" %in% input$UI_Checkbox)
       checkboxGroupInput("depth","Depth",
                          choices = c("under 5k" = "<5k",
                                      "5-10k" = "5k-10k",
@@ -24,9 +26,6 @@ shinyServer(function(input, output, session) {
                          selected = c("<5k","5k-10k","10k-15k",">15k","N/A"))
   })
   output$drillfor <- renderUI({ 
-    if(is.null(input$UI_Checkbox))
-      return()
-    if("DrillFor_select" %in% input$UI_Checkbox)
       checkboxGroupInput("drillfor","DrillFor",
                          choices = c("Oil" = "Oil",
                                      "Gas" = "Gas",
@@ -34,9 +33,6 @@ shinyServer(function(input, output, session) {
                          selected = c("Oil","Gas","Miscellaneous"))
   })
   output$basin <- renderUI({ 
-    if(is.null(input$UI_Checkbox))
-      return()
-    if("Basin_select" %in% input$UI_Checkbox)
       checkboxGroupInput("basin","Basin",
                          choices = c("Permian" = "Permian",
                                      "Williston" = "Williston",
@@ -60,9 +56,6 @@ shinyServer(function(input, output, session) {
                                       "Fayetteville","Other"))
   })
   output$trajectory <- renderUI({ 
-    if(is.null(input$UI_Checkbox))
-      return()
-    if("Trajectory_select" %in% input$UI_Checkbox)
       checkboxGroupInput("trajectory","Trajectory",
                          choices = c("Horizontal" = "Horizontal",
                                      "Vertical" = "Vertical",
@@ -71,9 +64,6 @@ shinyServer(function(input, output, session) {
                          selected = c("Horizontal","Vertical","Directional", "Other"))
   })
   output$welltype <- renderUI({ 
-    if(is.null(input$UI_Checkbox))
-      return()
-    if("WellType_select" %in% input$UI_Checkbox)
       checkboxGroupInput("welltype","Well Type",
                          choices = c("Development" = "Development",
                                      "Exploration" = "Exploration",
