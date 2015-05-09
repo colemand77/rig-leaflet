@@ -24,6 +24,14 @@ shinyUI(
                              "Direction Type" = "Trajectory_select",
                              "Well Type" = "WellType_select"
                            )),
+        
+        radioButtons("details", "Show Breakdown:",
+                     c("All" = "True",
+                       "None" = "False"),
+                     selected = "True"),
+        
+            
+        
         conditionalPanel(
           condition = "'Basin_select' %in% input.UI_Checkbox",
           uiOutput("basin")),
