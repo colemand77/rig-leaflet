@@ -110,6 +110,7 @@ shinyServer(function(input, output, session) {
     c("Development","Exploration","Infill","Other")
   } else input$welltype)
   graph_group <- reactive(if(is.null(input$graph_group))"None" else input$graph_group)
+  graph_stack <- reactive(if(input$stacked == "Stacked") TRUE else FALSE)
 
   #pick up the date from the input sheet
   usedDate <- reactive({names(rigCountDates[input$dates])})
@@ -187,7 +188,8 @@ output$myMap <- renderLeaflet({
                    Trajectory = trajectory(),
                    WellType = welltype(),
                    WellDepth = depth(),
-                   group = graph_group())
+                   group = graph_group(),
+                   stacked = graph_stack())
   })
 })
 

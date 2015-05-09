@@ -53,6 +53,10 @@ shinyUI(
                                     "Well Depth" = "WellDepth",
                                     "none" = "none"),
                                   selected = "none"),
+                      radioButtons("stacked", label = NULL,
+                                   c("Stacked" = "Stacked",
+                                     "Linear" = "Linear"),
+                                   selected = "Linear", inline = TRUE),
                       dygraphOutput("dygraph", width = "100%", height = "70%")
                       )
       )
