@@ -16,14 +16,15 @@ shinyUI(
         absolutePanel(id = "controls", class = "panel panel-default", fixed = TRUE,
                       draggable = TRUE, top = 60, left = "auto", right = 20, bottom = "auto",
                       width = 330, height = "auto",
-                      h2("Rig Explorer"),
+                      h2("Rig Count Explorer"),
                       
-                      sliderInput("dates", label = h3("Sliders"),
+                      textOutput("DateUsed"),
+                      sliderInput("dates", label = h3("Date"),
                                   min = min(rigCountDates), 
                                   max = max(rigCountDates), 
                                   value = max(rigCountDates),
                                   animate = TRUE),
-                      textOutput("DateUsed"),
+                      
                       
                       radioButtons("details", "Show Breakdown:",
                                    c("All" = "True",
