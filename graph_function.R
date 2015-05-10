@@ -32,8 +32,9 @@ ts_rigcount <- function(countynames, group, ...){
 
 # will have to add the build_Criteria() function at some point,
 #but for now this will work
-graph_rigcount <- function(countynames,...){
-  dygraph(ts_rigcount(countynames,...)) %>% dyRangeSelector()
+graph_rigcount <- function(countynames,stacked,...){
+  dygraph(ts_rigcount(countynames,...)) %>% dyRangeSelector() %>%
+    dyOptions(stackedGraph = stacked)
 }
 
 #way to build functions into the criteria; need to have the checkboxes

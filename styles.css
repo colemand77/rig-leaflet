@@ -28,12 +28,46 @@ h1, h2, h3, h4 { font-weight: 400; }
   opacity: 0.65;
   zoom: 0.9;
   transition: opacity 500ms 1s;
+  
 }
 #controls:hover {
   /* Fade in while hovering */
   opacity: 0.95;
   transition-delay: 0;
 }
+
+#graph {
+  /* Appearance */
+  overflow: hidden;
+  background-color: white;
+  padding: 10px 10px 10px 10px;
+  /* Fade out while not hovering */
+  height: 100px;
+  width: 100px;
+  opacity: 0.65;
+  zoom: 0.9;
+  transition: opactiy 500ms 1s;
+  transition: height 1s, width 1s;
+}
+
+#graph:hover{
+  opacity: 0.95;
+  transition-timing-function: ease;
+  transition-delay: 0;
+  height: 700px;
+  width: 600px;
+  transition: height 1s, width 1s;
+}
+
+#graph:active{
+  opacity: 0.95;
+  transition-timing-function: ease;
+  transition-delay: 0;
+  height: 700px;
+  width: 600px;
+  transition: height 0s, width 0s;
+}
+
 
 /* Position and style citation */
 #cite {
