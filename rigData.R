@@ -50,8 +50,8 @@ names(rigCountDates) <-  unique(adj[,PublishDate])
 #                 plot=FALSE, exact = FALSE, fill = TRUE)
 
 #test code
-getCountData("2015-04-24", xlim = c(-100,-90), ylim = c(35,36))
-test<-getCountData("2015-04-24", xlim = c(-100,-99), ylim = c(35,36))
+#getCountData("2015-04-24", xlim = c(-100,-90), ylim = c(35,36))
+#test<-getCountData("2015-04-24", xlim = c(-100,-99), ylim = c(35,36))
 
 
 #adj[adjName == getCountData("2015-04-24")$names]

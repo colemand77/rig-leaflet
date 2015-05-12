@@ -18,8 +18,9 @@ shinyUI(
                       width = 330, height = "auto",
                       h2("Rig Count Explorer"),
                       
-                      textOutput("DateUsed"),
-                      sliderInput("dates", label = h3("Date"),
+                      h5("Date Used"),
+                      h5(textOutput("DateUsed")),
+                      sliderInput("dates", label = h3("Date Selector"),
                                   min = min(rigCountDates), 
                                   max = max(rigCountDates), 
                                   value = max(rigCountDates),
