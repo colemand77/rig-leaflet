@@ -18,13 +18,18 @@ shinyUI(
                       width = 330, height = "auto",
                       h2("Rig Count Explorer"),
                       
-                      h5("Date Used"),
-                      h5(textOutput("DateUsed")),
-                      sliderInput("dates", label = h3("Date Selector"),
-                                  min = min(rigCountDates), 
-                                  max = max(rigCountDates), 
-                                  value = max(rigCountDates),
-                                  animate = TRUE),
+                    #  h5("Date Used"),
+                    #  h5(textOutput("DateUsed")),
+                    #  sliderInput("dates", label = h3("Date Selector"),
+                    #              min = min(rigCountDates), 
+                    #             max = max(rigCountDates), 
+                    #              value = max(rigCountDates),
+                    #              animate = TRUE),
+                      
+                      selectInput("dates", label = "Select Date of Report",
+                                  choices = names(rigCountDates),
+                                  selected = max(names(rigCountDates))),
+                      
                       
                       
                       radioButtons("details", "Show Breakdown:",

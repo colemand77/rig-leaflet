@@ -109,7 +109,7 @@ shinyServer(function(input, output, session) {
   graph_stack <- reactive(if(input$stacked == "Stacked") TRUE else FALSE)
 
   #pick up the date from the input sheet
-  usedDate <- reactive({names(rigCountDates[input$dates])})
+  usedDate <- reactive({input$dates})
   #subset the data as only the counties in the selected area
   used_Data <- reactive({getCountData(usedDate(), 
                                       Basin_select = basins(),
