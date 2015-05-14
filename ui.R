@@ -1,5 +1,6 @@
 library(shiny)
 library(leaflet)
+library(markdown)
 source("rigData.R")
 source("graph_function.R")
 basinList <- unique(adj[,Basin])
@@ -67,7 +68,11 @@ shinyUI(
                       dygraphOutput("dygraph", width = "500px", height = "500px")
                       )
       )
-    )
+    )#,
+    #tabPanel("instruction",
+    #         fluidPage(
+    #           includeMarkdown("Instructions.html")
+    #           ))
   )
 )
         
