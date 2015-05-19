@@ -119,6 +119,11 @@ shinyServer(function(input, output, session) {
                                       WellType_select = welltype(),
                                       xlim = as.numeric(desc()$xlim), 
                                       ylim = as.numeric(desc()$ylim))})
+
+  used_Data2 <- reactive({
+    mapData[[usedDate()]]
+  })
+
   all_county_visible <- reactive(map("county", plot = FALSE, xlim = desc()$xlim, ylim = desc()$ylim)$names)
   
   
@@ -167,15 +172,15 @@ output$myMap <- renderLeaflet({
     # setView(lat = desc()$lat, lng = desc()$lng, zoom = desc()$zoom) %>%
     addPolygons(fillColor = "lightgrey", stroke = TRUE, 
                 color = "white", weight = 2) %>%
-    addPolygons(data = isolate(used_Data()), fillColor = pal(isolate(used_Data()$count)), 
+    addPolygons(data = isolate(used_Data2()), fillColor = pal(isolate(used_Data2()$count)), 
                 fillOpacity = 0.75, stroke = TRUE, color = "white", 
-                weight = 1, popup = as.character(isolate(used_Data()$count)))
+                weight = 1, popup = as.character(isolate(used_Data2()$count)))
   })
 
   output$DateUsed <- renderText(usedDate())
   output$bounds <- renderText(bounds()$north)  
   output$center <- renderText(c(desc()$cent_lat, desc()$cent_lng))
-  output$countyList <- renderText(used_Data()$names)
+  output$countyList <- renderText(used_Data2()$names)
   output$choseBasin <- renderText(basins())
   output$dygraph <- renderDygraph({
     graph_rigcount(all_county_visible(), 
