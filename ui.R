@@ -3,6 +3,7 @@ library(leaflet)
 library(markdown)
 source("rigData.R")
 source("graph_function.R")
+
 basinList <- unique(adj[,Basin])
 
 shinyUI(
@@ -30,8 +31,14 @@ shinyUI(
                       selectInput("dates", label = "Select Date of Report",
                                   choices = names(rigCountDates),
                                   selected = max(names(rigCountDates))),
-                      
-                      
+                    
+                      sliderInput("date_slider", label = "test",
+                                  min = 0, max = length(names(rigCountDates)),
+                                  value = max(length(rigCountDates)),
+                                  step = 1,
+                                  animate = animationOptions(interval = 200)),
+                      textOutput("testdate"),
+                      textOutput("testdate2"),
                       
                       radioButtons("details", "Show Breakdown:",
                                    c("All" = "True",

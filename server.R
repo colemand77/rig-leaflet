@@ -12,6 +12,12 @@ mapStates <- map("state", fill = TRUE, plot = FALSE)
 shinyServer(function(input, output, session) {
   #all the UI rendering stuff
   
+  Values <- reactiveValues(oldDate = max(names(rigCountDates)))
+  session$onFlush(once = FALSE, function(){
+    isolate({Values$oldDate <- usedDate()})
+  })
+  
+  
   output$depth <- renderUI({
       checkboxGroupInput("depth","Depth",
                          choices = c("under 5k" = "<5k",
@@ -68,6 +74,8 @@ shinyServer(function(input, output, session) {
                          selected = c("Development","Exploration","Infill","Other"))  
   })
 
+  unique_names <- unique(adj[,adjName])
+  
   #acutal calculation stuff
   #desc returns the details of the active map frame / center / zoom limits
   desc <- reactive({
@@ -109,7 +117,14 @@ shinyServer(function(input, output, session) {
   graph_stack <- reactive(if(input$stacked == "Stacked") TRUE else FALSE)
 
   #pick up the date from the input sheet
-  usedDate <- reactive({input$dates})
+
+  usedDate2 <- reactive({input$dates})
+  
+  usedDate <- reactive({names(mapData)[(input$date_slider)]})
+  output$testdate <- renderText(usedDate())
+  #output$testdate2 <- renderText(c(paste0("countyFill",mapData[[Values$oldDate]]$names))) 
+  output$testdate2 <- renderText(Values$oldDate)
+
   #subset the data as only the counties in the selected area
   used_Data <- reactive({getCountData(usedDate(), 
                                       Basin_select = basins(),
@@ -161,7 +176,7 @@ shinyServer(function(input, output, session) {
 #Render the leaflet map; this is only updated when the input$dates is changed,
 #all other reactives are protected by isolate()
 output$myMap <- renderLeaflet({
-  input$dates
+  #input$date_slider
   basins()
   depth()
   trajectory()
@@ -171,11 +186,11 @@ output$myMap <- renderLeaflet({
     addTiles() %>%
     # setView(lat = desc()$lat, lng = desc()$lng, zoom = desc()$zoom) %>%
     addPolygons(fillColor = "lightgrey", stroke = TRUE, 
-                color = "white", weight = 2) %>%
-    addPolygons(data = isolate(used_Data2()), fillColor = pal(isolate(used_Data2()$count)), 
-                fillOpacity = 0.75, stroke = TRUE, color = "white", 
-                weight = 1, popup = as.character(isolate(used_Data2()$count)))
-  })
+                color = "white", weight = 2) #%>%
+    #addPolygons(data = isolate(used_Data2()), layerId = paste0("countyFill",names(used_Data2())), fillColor = pal(isolate(used_Data2()$count)), 
+    #            fillOpacity = 0.75, stroke = TRUE, color = "white", 
+    #            weight = 1, popup = as.character(isolate(used_Data2()$count)))
+    })
 
   output$DateUsed <- renderText(usedDate())
   output$bounds <- renderText(bounds()$north)  
@@ -192,6 +207,26 @@ output$myMap <- renderLeaflet({
                    group = graph_group(),
                    stacked = graph_stack())
   })
+
+
+oldShapes <- reactive({setdiff(paste0("countyFill",mapData[[Values$oldDate]]$names),
+                               paste0("countyFill",used_Data2()$names))
+                       })
+#answer is here...
+#http://stackoverflow.com/questions/26432789/can-i-save-the-old-value-of-a-reactive-object-when-it-changes
+  observeEvent(input$date_slider,{
+    leafletProxy("myMap", deferUntilFlush = TRUE) %>% 
+      removeShape(oldShapes())
+      #removeShape(c(paste0("countyFill",mapData[[Values$oldDate]]$names)))
+    
+    leafletProxy("myMap", deferUntilFlush = TRUE)%>%
+      #clearShapes() %>%
+      addPolygons(data = isolate(used_Data2()), layerId = paste0("countyFill",used_Data2()$names), fillColor = pal(isolate(used_Data2()$count)), 
+                  fillOpacity = 0.75, stroke = TRUE, color = "white", 
+                  weight = 1, popup = as.character(isolate(used_Data2()$count)))
+  })
+
+
 })
 
 
