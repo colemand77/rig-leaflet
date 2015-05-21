@@ -37,8 +37,9 @@ shinyUI(
                                   value = max(length(rigCountDates)),
                                   step = 1,
                                   animate = animationOptions(interval = 200)),
+                    
                       textOutput("testdate"),
-                      textOutput("testdate2"),
+                      #textOutput("testdate2"),
                       
                       radioButtons("details", "Show Breakdown:",
                                    c("All" = "True",

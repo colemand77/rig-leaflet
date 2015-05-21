@@ -14,7 +14,7 @@ shinyServer(function(input, output, session) {
   
   Values <- reactiveValues(oldDate = max(names(rigCountDates)))
   session$onFlush(once = FALSE, function(){
-    isolate({Values$oldDate <- usedDate()})
+    isolate({Values$oldData <- used_Data()$names})
   })
   
   
@@ -120,10 +120,10 @@ shinyServer(function(input, output, session) {
 
   usedDate2 <- reactive({input$dates})
   
-  usedDate <- reactive({names(mapData)[(input$date_slider)]})
+  usedDate <- reactive({names(rigCountDates)[(input$date_slider)]})
   output$testdate <- renderText(usedDate())
   #output$testdate2 <- renderText(c(paste0("countyFill",mapData[[Values$oldDate]]$names))) 
-  output$testdate2 <- renderText(Values$oldDate)
+  #output$testdate2 <- renderText(oldShapes())
 
   #subset the data as only the counties in the selected area
   used_Data <- reactive({getCountData(usedDate(), 
@@ -195,7 +195,7 @@ output$myMap <- renderLeaflet({
   output$DateUsed <- renderText(usedDate())
   output$bounds <- renderText(bounds()$north)  
   output$center <- renderText(c(desc()$cent_lat, desc()$cent_lng))
-  output$countyList <- renderText(used_Data2()$names)
+  output$countyList <- renderText(used_Data()$names)
   output$choseBasin <- renderText(basins())
   output$dygraph <- renderDygraph({
     graph_rigcount(all_county_visible(), 
@@ -209,18 +209,17 @@ output$myMap <- renderLeaflet({
   })
 
 
-oldShapes <- reactive({setdiff(paste0("countyFill",mapData[[Values$oldDate]]$names),
+oldShapes <- reactive({setdiff(paste0("countyFill",Values$oldData),
                                paste0("countyFill",used_Data()$names))
                        })
 #answer is here...
 #http://stackoverflow.com/questions/26432789/can-i-save-the-old-value-of-a-reactive-object-when-it-changes
-  observeEvent(input$date_slider,{
+  observeEvent(input$date_slider, {
+    
     leafletProxy("myMap", deferUntilFlush = TRUE) %>% 
       removeShape(oldShapes())
-      #removeShape(c(paste0("countyFill",mapData[[Values$oldDate]]$names)))
     
-    leafletProxy("myMap", deferUntilFlush = TRUE)%>%
-      #clearShapes() %>%
+    leafletProxy("myMap", deferUntilFlush = TRUE) %>%      
       addPolygons(data = isolate(used_Data()), layerId = paste0("countyFill",used_Data()$names), fillColor = pal(isolate(used_Data()$count)), 
                   fillOpacity = 0.75, stroke = TRUE, color = "white", 
                   weight = 1, popup = as.character(isolate(used_Data()$count)))
