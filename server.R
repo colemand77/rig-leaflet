@@ -210,7 +210,7 @@ output$myMap <- renderLeaflet({
 
 
 oldShapes <- reactive({setdiff(paste0("countyFill",mapData[[Values$oldDate]]$names),
-                               paste0("countyFill",used_Data2()$names))
+                               paste0("countyFill",used_Data()$names))
                        })
 #answer is here...
 #http://stackoverflow.com/questions/26432789/can-i-save-the-old-value-of-a-reactive-object-when-it-changes
@@ -221,9 +221,9 @@ oldShapes <- reactive({setdiff(paste0("countyFill",mapData[[Values$oldDate]]$nam
     
     leafletProxy("myMap", deferUntilFlush = TRUE)%>%
       #clearShapes() %>%
-      addPolygons(data = isolate(used_Data2()), layerId = paste0("countyFill",used_Data2()$names), fillColor = pal(isolate(used_Data2()$count)), 
+      addPolygons(data = isolate(used_Data()), layerId = paste0("countyFill",used_Data()$names), fillColor = pal(isolate(used_Data()$count)), 
                   fillOpacity = 0.75, stroke = TRUE, color = "white", 
-                  weight = 1, popup = as.character(isolate(used_Data2()$count)))
+                  weight = 1, popup = as.character(isolate(used_Data()$count)))
   })
 
 
