@@ -1,6 +1,9 @@
 library(shiny)
-library(leaflet)
 library(markdown)
+library(leaflet)
+#if (!require("devtools"))
+#  install.packages("devtools")
+#devtools::install_github("rstudio/shiny")
 source("rigData.R")
 source("graph_function.R")
 
@@ -9,7 +12,7 @@ basinList <- unique(adj[,Basin])
 shinyUI(
   navbarPage("RigExplorer", id ="nav",
     tabPanel("Interactive Map",
-      div(class = "outer",
+      div(class = "container-fluid",
           tags$head(
             includeCSS("styles.css")),
           
@@ -28,17 +31,24 @@ shinyUI(
                     #              value = max(rigCountDates),
                     #              animate = TRUE),
                       
-                      selectInput("dates", label = "Select Date of Report",
-                                  choices = names(rigCountDates),
-                                  selected = max(names(rigCountDates))),
+                      #selectInput("dates", label = "Select Date of Report",
+                      #            choices = names(rigCountDates),
+                      #            selected = max(names(rigCountDates))),
                     
+                      h3(textOutput("testdate")),  
+                      
                       sliderInput("date_slider", label = "test",
                                   min = 0, max = length(names(rigCountDates)),
-                                  value = max(length(rigCountDates)),
+                                  value = length(names(rigCountDates)),
                                   step = 1,
                                   animate = animationOptions(interval = 200)),
-                    
-                      textOutput("testdate"),
+                      
+                      sliderInput("testslider2", label = "test2",
+                                  min = 1, max = 24,
+                                  value = 12,
+                                  step = 1,
+                                  animate = animationOptions(interval = 200)),
+                      
                       #textOutput("testdate2"),
                       
                       radioButtons("details", "Show Breakdown:",

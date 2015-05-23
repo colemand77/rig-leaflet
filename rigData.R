@@ -45,6 +45,7 @@ rig_County_names <- unique(adj[Country == "UNITED STATES" &
 rigCountDates <- 1:length(unique(adj[,PublishDate]))
 names(rigCountDates) <-  unique(adj[,PublishDate])
 
+
 #note I used approximate matching here. THis could be a problem going forward.
 #RigCountyMap <- map("county", region  = rig_County_names,
 #                 plot=FALSE, exact = FALSE, fill = TRUE)

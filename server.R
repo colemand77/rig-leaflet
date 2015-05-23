@@ -1,4 +1,4 @@
-library(shiny)
+#library(shiny)
 library(leaflet)
 library(RColorBrewer)
 library(scales)

@@ -2,7 +2,7 @@ input[type="number"] {
   max-width: 80%;
 }
 
-div.outer {
+div.container-fluid {
   position: fixed;
   top: 41px;
   left: 0;
@@ -26,7 +26,7 @@ h1, h2, h3, h4 { font-weight: 400; }
   cursor: move;
   /* Fade out while not hovering */
   opacity: 0.65;
-  zoom: 0.9;
+  zoom: 1;
   transition: opacity 500ms 1s;
   
 }
