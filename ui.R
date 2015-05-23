@@ -57,7 +57,7 @@ shinyUI(
                       ),
         
         absolutePanel(id = "graph", class = "panel panel-default", fixed = FALSE,
-                      draggable = FALSE, top = "auto", left = 20, right = "auto", bottom = 5,
+                      draggable = TRUE, top = "auto", left = 20, right = "auto", bottom = 5,
                       #width = 600, #height = 400,
                       h4("graph output"),
                       selectInput("graph_group", label = "",
