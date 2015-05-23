@@ -43,7 +43,7 @@ rig_County_names <- unique(adj[Country == "UNITED STATES" &
                                adjName])
 
 rigCountDates <- 1:length(unique(adj[,PublishDate]))
-names(rigCountDates) <-  unique(adj[,PublishDate])
+names(rigCountDates) <-  sort(unique(adj[,PublishDate]))
 
 
 #note I used approximate matching here. THis could be a problem going forward.

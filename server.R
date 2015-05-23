@@ -132,8 +132,10 @@ shinyServer(function(input, output, session) {
                                       Trajectory_select = trajectory(),
                                       DrillFor_select = drillfor(),
                                       WellType_select = welltype(),
-                                      xlim = as.numeric(desc()$xlim), 
-                                      ylim = as.numeric(desc()$ylim))})
+                                      xlim = c(-130,60),#as.numeric(desc()$xlim), 
+                                      ylim = c(25,50)#as.numeric(desc()$ylim)
+                                      )
+                         })
 
   used_Data2 <- reactive({
     mapData[[usedDate()]]
@@ -177,11 +179,11 @@ shinyServer(function(input, output, session) {
 #all other reactives are protected by isolate()
 output$myMap <- renderLeaflet({
   #input$date_slider
-  basins()
-  depth()
-  trajectory()
-  drillfor()
-  welltype()
+  #basins()
+  #depth()
+  #trajectory()
+  #drillfor()
+  #welltype()
   leaflet(data = mapStates) %>% 
     addTiles() %>%
     # setView(lat = desc()$lat, lng = desc()$lng, zoom = desc()$zoom) %>%
@@ -214,7 +216,13 @@ oldShapes <- reactive({setdiff(paste0("countyFill",Values$oldData),
                        })
 #answer is here...
 #http://stackoverflow.com/questions/26432789/can-i-save-the-old-value-of-a-reactive-object-when-it-changes
-  observeEvent(input$date_slider, {
+  observeEvent({input$date_slider
+                basins()
+                depth()
+                trajectory()
+                drillfor()
+                welltype()
+                }, {
     
     leafletProxy("myMap", deferUntilFlush = TRUE) %>% 
       removeShape(oldShapes())
@@ -223,7 +231,7 @@ oldShapes <- reactive({setdiff(paste0("countyFill",Values$oldData),
       addPolygons(data = isolate(used_Data()), layerId = paste0("countyFill",used_Data()$names), fillColor = pal(isolate(used_Data()$count)), 
                   fillOpacity = 0.75, stroke = TRUE, color = "white", 
                   weight = 1, popup = as.character(isolate(used_Data()$count)))
-  })
+  }, ignoreNULL = FALSE)
 
 
 })

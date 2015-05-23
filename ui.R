@@ -1,9 +1,7 @@
 library(shiny)
 library(markdown)
 library(leaflet)
-#if (!require("devtools"))
-#  install.packages("devtools")
-#devtools::install_github("rstudio/shiny")
+
 source("rigData.R")
 source("graph_function.R")
 
@@ -18,7 +16,7 @@ shinyUI(
           
         leafletOutput("myMap", width = "100%", height = "100%"),
         
-        absolutePanel(id = "controls", class = "panel panel-default", fixed = TRUE,
+        absolutePanel(id = "controls", class = "panel panel-default", fixed = FALSE,
                       draggable = TRUE, top = 60, left = "auto", right = 20, bottom = "auto",
                       width = 330, height = "auto",
                       h2("Rig Count Explorer"),
@@ -38,18 +36,10 @@ shinyUI(
                       h3(textOutput("testdate")),  
                       
                       sliderInput("date_slider", label = "test",
-                                  min = 0, max = length(names(rigCountDates)),
+                                  min = 1, max = length(names(rigCountDates)),
                                   value = length(names(rigCountDates)),
                                   step = 1,
                                   animate = animationOptions(interval = 200)),
-                      
-                      sliderInput("testslider2", label = "test2",
-                                  min = 1, max = 24,
-                                  value = 12,
-                                  step = 1,
-                                  animate = animationOptions(interval = 200)),
-                      
-                      #textOutput("testdate2"),
                       
                       radioButtons("details", "Show Breakdown:",
                                    c("All" = "True",
