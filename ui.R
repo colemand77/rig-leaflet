@@ -35,7 +35,7 @@ shinyUI(
                     
                       h3(textOutput("testdate")),  
                       
-                      sliderInput("date_slider", label = "test",
+                      sliderInput("date_slider", label = "Date Selector (historical -> Current)",
                                   min = 1, max = length(names(rigCountDates)),
                                   value = length(names(rigCountDates)),
                                   step = 1,
