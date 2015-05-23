@@ -21,7 +21,7 @@ shinyUI(
                       width = 330, height = "auto",
                       h2("Rig Count Explorer"),
                                         
-                      h3(textOutput("testdate")),  
+                      h3(textOutput("DateUsed")),  
                       
                       sliderInput("date_slider", label = "Date Selector (historical -> Current)",
                                   min = 1, max = length(names(rigCountDates)),

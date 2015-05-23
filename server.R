@@ -1,4 +1,3 @@
-#library(shiny)
 library(leaflet)
 library(RColorBrewer)
 library(scales)
@@ -10,14 +9,17 @@ library(dplyr)
 mapStates <- map("state", fill = TRUE, plot = FALSE)
 
 shinyServer(function(input, output, session) {
-  #all the UI rendering stuff
-  
+
+  #Use the reactiveValues (isolate) pattern to get the names 
+  #of the counties that were used before the last update
+  #answer is here...
+  #http://stackoverflow.com/questions/26432789/can-i-save-the-old-value-of-a-reactive-object-when-it-changes  
   Values <- reactiveValues(oldDate = max(names(rigCountDates)))
   session$onFlush(once = FALSE, function(){
     isolate({Values$oldData <- used_Data()$names})
   })
   
-  
+  #all the Dynamic UI rendering stuff
   output$depth <- renderUI({
       checkboxGroupInput("depth","Depth",
                          choices = c("under 5k" = "<5k",
@@ -73,7 +75,8 @@ shinyServer(function(input, output, session) {
                                      "Other" = "Other"),
                          selected = c("Development","Exploration","Infill","Other"))  
   })
-
+  
+  #unique County Names
   unique_names <- unique(adj[,adjName])
   
   #acutal calculation stuff
@@ -117,15 +120,11 @@ shinyServer(function(input, output, session) {
   graph_stack <- reactive(if(input$stacked == "Stacked") TRUE else FALSE)
 
   #pick up the date from the input sheet
-
-  usedDate2 <- reactive({input$dates})
-  
   usedDate <- reactive({names(rigCountDates)[(input$date_slider)]})
   output$testdate <- renderText(usedDate())
-  #output$testdate2 <- renderText(c(paste0("countyFill",mapData[[Values$oldDate]]$names))) 
-  #output$testdate2 <- renderText(oldShapes())
 
-  #subset the data as only the counties in the selected area
+  #used_Data gets the count data from the entire area subject to the restrictions from
+  #the input sheet.
   used_Data <- reactive({getCountData(usedDate(), 
                                       Basin_select = basins(),
                                       Depth_select = depth(),
@@ -136,14 +135,10 @@ shinyServer(function(input, output, session) {
                                       ylim = c(25,50)#as.numeric(desc()$ylim)
                                       )
                          })
-
-  used_Data2 <- reactive({
-    mapData[[usedDate()]]
-  })
-
+  
+  #list of the visible counties ???Check if this is used anywhere?
   all_county_visible <- reactive(map("county", plot = FALSE, xlim = desc()$xlim, ylim = desc()$ylim)$names)
-  
-  
+    
   #function to return the map object with the rig counts for correct date
   getCountData <- function(date, Basin_select, 
                            Depth_select, 
@@ -170,28 +165,14 @@ shinyServer(function(input, output, session) {
     return(tempCountyMap)
   }
   
-#  thismap <- leaflet(data = mapStates) %>% addTiles() %>%
-#    addPolygons(fillColor = "lightgrey", stroke = TRUE, color = "white", weight = 2) %>%
-#    addPolygons(data = used_Data(), fillColor = "red", stroke = FALSE)
-  
 
-#Render the leaflet map; this is only updated when the input$dates is changed,
-#all other reactives are protected by isolate()
+#Build the background to the leaflet map.
+
 output$myMap <- renderLeaflet({
-  #input$date_slider
-  #basins()
-  #depth()
-  #trajectory()
-  #drillfor()
-  #welltype()
   leaflet(data = mapStates) %>% 
     addTiles() %>%
-    # setView(lat = desc()$lat, lng = desc()$lng, zoom = desc()$zoom) %>%
     addPolygons(fillColor = "lightgrey", stroke = TRUE, 
-                color = "white", weight = 2) #%>%
-    #addPolygons(data = isolate(used_Data2()), layerId = paste0("countyFill",names(used_Data2())), fillColor = pal(isolate(used_Data2()$count)), 
-    #            fillOpacity = 0.75, stroke = TRUE, color = "white", 
-    #            weight = 1, popup = as.character(isolate(used_Data2()$count)))
+                color = "white", weight = 2)
     })
 
   output$DateUsed <- renderText(usedDate())
@@ -210,12 +191,13 @@ output$myMap <- renderLeaflet({
                    stacked = graph_stack())
   })
 
-
+#oldShapes is the counties that were mapped in the last update
+#that are not mapped in the new update
+#they are the counties of the chloropleth that need to be removed.
 oldShapes <- reactive({setdiff(paste0("countyFill",Values$oldData),
                                paste0("countyFill",used_Data()$names))
                        })
-#answer is here...
-#http://stackoverflow.com/questions/26432789/can-i-save-the-old-value-of-a-reactive-object-when-it-changes
+
   observeEvent({input$date_slider
                 basins()
                 depth()
