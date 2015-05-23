@@ -20,19 +20,7 @@ shinyUI(
                       draggable = FALSE, top = 60, left = "auto", right = 20, bottom = "auto",
                       width = 330, height = "auto",
                       h2("Rig Count Explorer"),
-                      
-                    #  h5("Date Used"),
-                    #  h5(textOutput("DateUsed")),
-                    #  sliderInput("dates", label = h3("Date Selector"),
-                    #              min = min(rigCountDates), 
-                    #             max = max(rigCountDates), 
-                    #              value = max(rigCountDates),
-                    #              animate = TRUE),
-                      
-                      #selectInput("dates", label = "Select Date of Report",
-                      #            choices = names(rigCountDates),
-                      #            selected = max(names(rigCountDates))),
-                    
+                                        
                       h3(textOutput("testdate")),  
                       
                       sliderInput("date_slider", label = "Date Selector (historical -> Current)",
@@ -58,7 +46,6 @@ shinyUI(
         
         absolutePanel(id = "graph", class = "panel panel-default", fixed = FALSE,
                       draggable = TRUE, top = "auto", left = 20, right = "auto", bottom = 5,
-                      #width = 600, #height = 400,
                       h4("graph output"),
                       selectInput("graph_group", label = "",
                                   choices = list(
