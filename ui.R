@@ -17,7 +17,7 @@ shinyUI(
         leafletOutput("myMap", width = "100%", height = "100%"),
         
         absolutePanel(id = "controls", class = "panel panel-default", fixed = FALSE,
-                      draggable = FALSE, top = 60, left = "auto", right = 20, bottom = "auto",
+                      draggable = TRUE, top = 60, left = "auto", right = 20, bottom = "auto",
                       width = 330, height = "auto",
                       h2("Rig Count Explorer"),
                                         
@@ -45,7 +45,7 @@ shinyUI(
                       ),
         
         absolutePanel(id = "graph", class = "panel panel-default", fixed = FALSE,
-                      draggable = TRUE, top = "auto", left = 20, right = "auto", bottom = 5,
+                      draggable = FALSE, top = "auto", left = 20, right = "auto", bottom = 5,
                       h4("graph output"),
                       selectInput("graph_group", label = "",
                                   choices = list(

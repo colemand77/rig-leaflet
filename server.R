@@ -121,7 +121,6 @@ shinyServer(function(input, output, session) {
 
   #pick up the date from the input sheet
   usedDate <- reactive({names(rigCountDates)[(input$date_slider)]})
-  output$testdate <- renderText(usedDate())
 
   #used_Data gets the count data from the entire area subject to the restrictions from
   #the input sheet.
@@ -175,11 +174,7 @@ output$myMap <- renderLeaflet({
                 color = "white", weight = 2)
     })
 
-  output$DateUsed <- renderText(usedDate())
-  output$bounds <- renderText(bounds()$north)  
-  output$center <- renderText(c(desc()$cent_lat, desc()$cent_lng))
-  output$countyList <- renderText(used_Data()$names)
-  output$choseBasin <- renderText(basins())
+
   output$dygraph <- renderDygraph({
     graph_rigcount(all_county_visible(), 
                    Basin = basins(), 
@@ -197,7 +192,8 @@ output$myMap <- renderLeaflet({
 oldShapes <- reactive({setdiff(paste0("countyFill",Values$oldData),
                                paste0("countyFill",used_Data()$names))
                        })
-
+#Code that removes the old counties and adds the new ones.
+#ignoreNull allows to map when first opened
   observeEvent({input$date_slider
                 basins()
                 depth()
@@ -214,9 +210,4 @@ oldShapes <- reactive({setdiff(paste0("countyFill",Values$oldData),
                   fillOpacity = 0.75, stroke = TRUE, color = "white", 
                   weight = 1, popup = as.character(isolate(used_Data()$count)))
   }, ignoreNULL = FALSE)
-
-
 })
-
-
-# Look at leafletproxy!? might be a faster way of rendering changes to the county polygons?
