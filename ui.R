@@ -60,7 +60,7 @@ shinyUI(
                                    c("Stacked" = "Stacked",
                                      "Linear" = "Linear"),
                                    selected = "Linear", inline = TRUE),
-                      dygraphOutput("dygraph", width = "500px", height = "500px")
+                      dygraphOutput("dygraph")#, width = "auto", height = "auto") #"500px"
                       )
       )
     )#,
