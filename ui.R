@@ -18,7 +18,7 @@ shinyUI(
         
         absolutePanel(id = "controls", class = "panel panel-default", fixed = FALSE,
                       draggable = TRUE, top = 60, left = "auto", right = 20, bottom = "auto",
-                      width = 330, height = "auto",
+                      width = 330, 
                       h2("Rig Count Explorer"),
                                         
                       h3(textOutput("DateUsed")),  

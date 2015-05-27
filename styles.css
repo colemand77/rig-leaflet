@@ -24,6 +24,10 @@ h1, h2, h3, h4 { font-weight: 400; }
   background-color: white;
   padding: 0 20px 20px 20px;
   cursor: move;
+  height: fit-content;
+  max-height: 80vh;
+    
+  overflow: auto;
   /* Fade out while not hovering */
   opacity: 0.65;
   zoom: 1;
@@ -62,7 +66,8 @@ h1, h2, h3, h4 { font-weight: 400; }
 }
 
 #dygraph {
-  height: 60vh !important;
+  height: calc(80vh - 200px) !important;
+  /*height: 40vh !important;*/
   width: 35vw !important;
 }
 
