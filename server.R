@@ -121,7 +121,7 @@ shinyServer(function(input, output, session) {
 
   #pick up the date from the input sheet
   usedDate <- reactive({names(rigCountDates)[(input$date_slider)]})
-
+  DateUsed <- renderText({usedDate()})
   #used_Data gets the count data from the entire area subject to the restrictions from
   #the input sheet.
   used_Data <- reactive({getCountData(usedDate(), 
