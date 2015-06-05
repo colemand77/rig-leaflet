@@ -6,7 +6,6 @@ countyList_in_scope <- function(xlim, ylim){
   map("county",xlim = xlim, ylim = ylim, plot = FALSE, fill = TRUE)$names
 }
 
-
 groupingString <- function(group){
   if (is.null(group)) return("list(PublishDate)")
   if(group == "none") return("list(PublishDate)") else {

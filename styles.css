@@ -2,7 +2,7 @@ input[type="number"] {
   max-width: 80%;
 }
 
-div.outer {
+div.container-fluid {
   position: fixed;
   top: 41px;
   left: 0;
@@ -24,10 +24,15 @@ h1, h2, h3, h4 { font-weight: 400; }
   background-color: white;
   padding: 0 20px 20px 20px;
   cursor: move;
+  height: fit-content;
+  max-height: 80vh;
+    
+  overflow: auto;
   /* Fade out while not hovering */
   opacity: 0.65;
-  zoom: 0.9;
+  zoom: 1;
   transition: opacity 500ms 1s;
+  /* overflow-y: scroll; */
   
 }
 #controls:hover {
@@ -42,8 +47,9 @@ h1, h2, h3, h4 { font-weight: 400; }
   background-color: white;
   padding: 10px 10px 10px 10px;
   /* Fade out while not hovering */
-  height: 100px;
-  width: 200px;
+  /* height: 100px */
+  height: 10vh;
+  width: 20vw;
   opacity: 0.65;
   transition: opactiy 500ms 1s;
   transition: height 1s, width 1s;
@@ -53,9 +59,16 @@ h1, h2, h3, h4 { font-weight: 400; }
   opacity: 0.95;
   transition-timing-function: ease;
   transition-delay: 0;
-  height: 700px;
-  width: 600px;
+  /* height: 700px */
+  height: 80vh;
+  width: 40vw;
   transition: height 1s, width 1s;
+}
+
+#dygraph {
+  height: calc(80vh - 200px) !important;
+  /*height: 40vh !important;*/
+  width: 35vw !important;
 }
 
 /* Position and style citation */

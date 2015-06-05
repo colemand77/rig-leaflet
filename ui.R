@@ -1,37 +1,33 @@
 library(shiny)
-library(leaflet)
 library(markdown)
+library(leaflet)
+
 source("rigData.R")
 source("graph_function.R")
+
 basinList <- unique(adj[,Basin])
 
 shinyUI(
   navbarPage("RigExplorer", id ="nav",
     tabPanel("Interactive Map",
-      div(class = "outer",
+      div(class = "container-fluid",
           tags$head(
             includeCSS("styles.css")),
           
         leafletOutput("myMap", width = "100%", height = "100%"),
         
-        absolutePanel(id = "controls", class = "panel panel-default", fixed = TRUE,
+        absolutePanel(id = "controls", class = "panel panel-default", fixed = FALSE,
                       draggable = TRUE, top = 60, left = "auto", right = 20, bottom = "auto",
-                      width = 330, height = "auto",
+                      width = 330, 
                       h2("Rig Count Explorer"),
+                                        
+                      h4(textOutput("DateUsed")),  
                       
-                    #  h5("Date Used"),
-                    #  h5(textOutput("DateUsed")),
-                    #  sliderInput("dates", label = h3("Date Selector"),
-                    #              min = min(rigCountDates), 
-                    #             max = max(rigCountDates), 
-                    #              value = max(rigCountDates),
-                    #              animate = TRUE),
-                      
-                      selectInput("dates", label = "Select Date of Report",
-                                  choices = names(rigCountDates),
-                                  selected = max(names(rigCountDates))),
-                      
-                      
+                      sliderInput("date_slider", label = "Date Selector (historical -> Current)",
+                                  min = 1, max = length(names(rigCountDates)),
+                                  value = length(names(rigCountDates)),
+                                  step = 1,
+                                  animate = animationOptions(interval = 750)),
                       
                       radioButtons("details", "Show Breakdown:",
                                    c("All" = "True",
@@ -50,7 +46,6 @@ shinyUI(
         
         absolutePanel(id = "graph", class = "panel panel-default", fixed = FALSE,
                       draggable = FALSE, top = "auto", left = 20, right = "auto", bottom = 5,
-                      #width = 600, #height = 400,
                       h4("graph output"),
                       selectInput("graph_group", label = "",
                                   choices = list(
@@ -65,7 +60,7 @@ shinyUI(
                                    c("Stacked" = "Stacked",
                                      "Linear" = "Linear"),
                                    selected = "Linear", inline = TRUE),
-                      dygraphOutput("dygraph", width = "500px", height = "500px")
+                      dygraphOutput("dygraph")#, width = "auto", height = "auto") #"500px"
                       )
       )
     )#,
