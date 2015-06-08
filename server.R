@@ -121,6 +121,8 @@ shinyServer(function(input, output, session) {
 
   #pick up the date from the input sheet
   usedDate <- reactive({names(rigCountDates)[(input$date_slider)]})
+  usedDate_Bar <- reactive({names(rigCountDates)[(input$date_slider2)]})
+  output$DateUsed_bar <- renderText({usedDate_Bar()})
   output$DateUsed <- renderText({usedDate()})
   #used_Data gets the count data from the entire area subject to the restrictions from
   #the input sheet.
@@ -202,12 +204,21 @@ oldShapes <- reactive({setdiff(paste0("countyFill",Values$oldData),
                 welltype()
                 }, {
     
-    leafletProxy("myMap", deferUntilFlush = TRUE) %>% 
+    leafletProxy("myMap", session, deferUntilFlush = TRUE) %>% 
       removeShape(oldShapes())
     
-    leafletProxy("myMap", deferUntilFlush = TRUE) %>%      
+    leafletProxy("myMap", session, deferUntilFlush = TRUE) %>%      
       addPolygons(data = isolate(used_Data()), layerId = paste0("countyFill",used_Data()$names), fillColor = pal(isolate(used_Data()$count)), 
                   fillOpacity = 0.75, stroke = TRUE, color = "white", 
                   weight = 1, popup = as.character(isolate(used_Data()$count)))
   }, ignoreNULL = FALSE)
+
+bar_group <- reactive({input$group})
+bar_x_axis <- reactive({input$x_axis})
+
+
+reactive({
+  ggvisBarChart(bar_group(), bar_x_axis(), usedDate_Bar())
+  })%>%
+    bind_shiny("GroupedBarChart")  
 })

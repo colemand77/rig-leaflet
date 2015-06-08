@@ -4,6 +4,7 @@ library(leaflet)
 
 source("rigData.R")
 source("graph_function.R")
+source("ggvis_barChart.R")
 
 basinList <- unique(adj[,Basin])
 
@@ -63,13 +64,58 @@ shinyUI(
                       dygraphOutput("dygraph")#, width = "auto", height = "auto") #"500px"
                       )
       )
-    )#,
-    #tabPanel("instruction",
-    #         fluidPage(
-    #           includeMarkdown("Instructions.html")
-    #           ))
+    ),
+    tabPanel("BreakDown",
+             fluidPage(
+               hr(),
+               
+              fluidRow(
+                column(width =1),
+                column(width = 4,
+                    sliderInput("date_slider2", label = "Date Selector (historical -> Current)",
+                                min = 1, max = length(names(rigCountDates)),
+                                value = length(names(rigCountDates)),
+                                step = 1,
+                                animate = animationOptions(interval = 500))
+                     ),
+              column(width = 2, offset = 1,
+                     selectInput("group", label = "Group Bars By",
+                                 choices = list(
+                                   "Country" = "Country",
+                                   "Basin" = "Basin",
+                                   "DrillFor" = "DrillFor",
+                                   "Location" = "Location",
+                                   "Trajectory" = "Trajectory",
+                                   "WellType" = "WellType",
+                                   "WellDepth" = "WellDepth",
+                                   "State" = "State.Province",
+                                   "region" = "region"),
+                                 selected = "Basin")
+                     ),
+              column(width = 2, offset = 1,
+                     selectInput("x_axis", label = "x axis",
+                                 choices = list(
+                                   "Country" = "Country",
+                                   "Basin" = "Basin",
+                                   "DrillFor" = "DrillFor",
+                                   "Location" = "Location",
+                                   "Trajectory" = "Trajectory",
+                                   "WellType" = "WellType",
+                                   "WellDepth" = "WellDepth",
+                                   "State" = "State.Province",
+                                   "region" = "region"),
+                                 selected = "DrillFor")
+              )
+             ),
+             fluidRow(
+               column(width = 1),
+               column(width = 10,
+              # textOutput("DateUsed_Bar"))
+               ggvisOutput("GroupedBarChart")),
+              column(width = 1))
+         )
+    ))
   )
-)
         
     
     
