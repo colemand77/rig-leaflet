@@ -5,6 +5,7 @@ library(leaflet)
 source("rigData.R")
 source("graph_function.R")
 source("ggvis_barChart.R")
+source("breakDown_list.R")
 
 basinList <- unique(adj[,Basin])
 
@@ -80,31 +81,13 @@ shinyUI(
                      ),
               column(width = 2, offset = 1,
                      selectInput("group", label = "Group Bars By",
-                                 choices = list(
-                                   "Country" = "Country",
-                                   "Basin" = "Basin",
-                                   "DrillFor" = "DrillFor",
-                                   "Location" = "Location",
-                                   "Trajectory" = "Trajectory",
-                                   "WellType" = "WellType",
-                                   "WellDepth" = "WellDepth",
-                                   "State" = "State.Province",
-                                   "region" = "region"),
-                                 selected = "Basin")
+                                 choices = breakDown[!breakDown %in% breakDown[1]],
+                                 selected = breakDown[2])
                      ),
               column(width = 2, offset = 1,
                      selectInput("x_axis", label = "x axis",
-                                 choices = list(
-                                   "Country" = "Country",
-                                   "Basin" = "Basin",
-                                   "DrillFor" = "DrillFor",
-                                   "Location" = "Location",
-                                   "Trajectory" = "Trajectory",
-                                   "WellType" = "WellType",
-                                   "WellDepth" = "WellDepth",
-                                   "State" = "State.Province",
-                                   "region" = "region"),
-                                 selected = "DrillFor")
+                                 choices = breakDown[!breakDown %in% breakDown[2]],
+                                 selected = breakDown[1])
               )
              ),
              fluidRow(

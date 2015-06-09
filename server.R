@@ -216,6 +216,22 @@ oldShapes <- reactive({setdiff(paste0("countyFill",Values$oldData),
 bar_group <- reactive({input$group})
 bar_x_axis <- reactive({input$x_axis})
 
+observe({
+  bar_group_choices <- breakDown[!breakDown %in% bar_x_axis()]
+  bar_x_axis_choices <- breakDown[!breakDown %in% bar_group()]
+  
+  if(!is.null(bar_group)){
+    updateSelectInput(session, "group",
+                      choices = bar_group_choices,
+                      selected = bar_group())
+  }
+  if(!is.null(bar_x_axis)){
+    updateSelectInput(session, "x_axis",
+                      choices = bar_x_axis_choices,
+                      selected = bar_x_axis())
+  }
+})
+
 
 reactive({
   ggvisBarChart(bar_group(), bar_x_axis(), usedDate_Bar())
