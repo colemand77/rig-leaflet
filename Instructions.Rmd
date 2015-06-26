@@ -1,0 +1,33 @@
+---
+title: "Instructions for RigCount Map"
+author: "Dave"
+date: "Tuesday, May 12, 2015"
+output: html_document
+---
+
+###Map Navigation
+The map itself can either be clicked and dragged to find the area of interest.  The map can be zoomed by either:
+
+* the mouse wheel (similar to google maps)
+* holding shift and drawing a box around the area of interest
+
+The darker the "blue" color, the more rigs are in that county
+click on any count to see the count of rigs currenlty working in that county.
+
+###Rig Count Explorer Window
+The explorer window on the right is made up of a 
+
+* Date selector
+* Subsettng groups
+  + use the  selector to choose the subset of information you'd like to see on on the map and time series charts
+
+
+### Time series chart
+The time series chart tool is located on the bottom left of the map window.  The chart will appear when the mouse is hovered over the tool.
+
+* **The tool will show the historical counts of the counties **that are visible on the map**
+* Grouping cand be performed by selected the group of interest from the drop down menu.
+* Selected "stacked" will show a stacked line chart and "linear" will show the series graphed independently
+( The window selector at the bottom can be utilized to choose the time period of interest, or you can just click and drag on the graph itself to zoom on on the area of interest.
+
+_Data is sourced from the Baker Hughes website and nothing about its accuracy is guaranteed._

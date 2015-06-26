@@ -2,10 +2,13 @@ library(dygraphs)
 library(xts)
 library(tidyr)
 
+#list of the counties to filter by
 countyList_in_scope <- function(xlim, ylim){
   map("county",xlim = xlim, ylim = ylim, plot = FALSE, fill = TRUE)$names
 }
 
+# build the "by" clause in the data.table; 
+# Checks for no parameters and includes the PublishDate
 groupingString <- function(group){
   if (is.null(group)) return("list(PublishDate)")
   if(group == "none") return("list(PublishDate)") else {
@@ -15,8 +18,9 @@ groupingString <- function(group){
 
 groupingString("Thisthing")
 
+#function to filter and group data.table and convert to .xts format
 ts_rigcount <- function(countynames, group, ...){
-  
+  #paramstring is string returned from Build Criteria for the filter function
   paramstring <- build_Criteria(...)
   temp <- adj[adjName %in% countynames & eval(parse(text = paramstring)),
               list(RigCount = sum(RigCount)), 
@@ -38,15 +42,20 @@ graph_rigcount <- function(countynames,stacked,...){
 
 #way to build functions into the criteria; need to have the checkboxes
 #in order to see it broken down properly
+
+#par_fmt adds quotations and commas between items
 par_fmt <- function(par){
   paste0("'",par,"'", collapse = ',')
 }
 
+#grp_fmt creates a string for evaluating if the arguments are present???
 grp_fmt <- function(...){
   parArray <- par_fmt((...))
   argname <- names(list(...))
   paste0(argname, " %in% c(", parArray,")")
 }
+
+# build the criteria for the filter function
 
 build_Criteria <- function(Basin = NULL, 
                            DrillFor = NULL,
