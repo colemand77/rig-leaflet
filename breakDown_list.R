@@ -1,0 +1,10 @@
+breakDown <- list(
+  "Country" = "Country",
+  "Basin" = "Basin",
+  "DrillFor" = "DrillFor",
+  "Location" = "Location",
+  "Trajectory" = "Trajectory",
+  "WellType" = "WellType",
+  "WellDepth" = "WellDepth",
+  "State" = "State.Province",
+  "region" = "region")
