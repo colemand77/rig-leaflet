@@ -4,6 +4,7 @@ library(scales)
 library(lattice)
 library(data.table)
 library(dplyr)
+library(markdown)
 
 #variables to be set outside the reactive loop
 mapStates <- map("state", fill = TRUE, plot = FALSE)
@@ -238,4 +239,12 @@ reactive({
   ggvisBarChart(bar_group(), bar_x_axis(), usedDate_Bar())
   })%>%
     bind_shiny("GroupedBarChart")  
+
+output$HelpPage <- renderUI({
+  includeMarkdown("Instructions.Rmd")
 })
+
+
+
+})
+
