@@ -97,8 +97,17 @@ shinyUI(
                ggvisOutput("GroupedBarChart")),
               column(width = 1))
          )
-    ))
+    ),
+    tabPanel("Instructions",
+             fluidPage(
+               fluidRow(style = "padding-top: 30px; padding-left: 30px; padding-right: 30px",
+                uiOutput("HelpPage")
+               )
+             )
+    )
+    
   )
+)
         
     
     
