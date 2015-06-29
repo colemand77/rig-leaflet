@@ -1,0 +1,33 @@
+---
+title: "Weekly Update"
+author: "Dave"
+date: "Sunday, June 28, 2015"
+output: html_document
+---
+
+
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+source("rigData.R")
+str(adj)
+max(adj[,PublishDate])
+as.character(max(adj[,PublishDate]))
+as.character()
+
+```
+
+The date of the most recent update is `r as.character(max(adj[,PublishDate]))`
+The total rig count as of `r as.character(max(adj[,PublishDate]))` is 
+
+```{r}
+summary(cars)
+```
+
+You can also embed plots, for example:
+
+```{r, echo=FALSE}
+plot(cars)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
