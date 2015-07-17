@@ -22,7 +22,7 @@ groupingString("Thisthing")
 ts_rigcount <- function(countynames, group, ...){
   #paramstring is string returned from Build Criteria for the filter function
   paramstring <- build_Criteria(...)
-  temp <- adj[adjName %in% countynames & eval(parse(text = paramstring)),
+  temp <- adj[adjName %in% countynames & Location == "Land"  & eval(parse(text = paramstring)),
               list(RigCount = sum(RigCount)), 
               by = eval(parse(text = groupingString(group)))]
   if(group != "none"){
