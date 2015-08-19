@@ -15,7 +15,7 @@ shinyServer(function(input, output, session) {
   #of the counties that were used before the last update
   #answer is here...
   #http://stackoverflow.com/questions/26432789/can-i-save-the-old-value-of-a-reactive-object-when-it-changes  
-  Values <- reactiveValues(oldDate = max(names(rigCountDates)))
+  Values <- reactiveValues(oldData =  max(names(rigCountDates)))
   session$onFlush(once = FALSE, function(){
     isolate({Values$oldData <- used_Data()$names})
   })
@@ -193,9 +193,10 @@ output$myMap <- renderLeaflet({
 #oldShapes is the counties that were mapped in the last update
 #that are not mapped in the new update
 #they are the counties of the chloropleth that need to be removed.
-oldShapes <- reactive({setdiff(paste0("countyFill",Values$oldData),
-                               paste0("countyFill",used_Data()$names))
+oldShapes <- reactive({setdiff(paste0("countyFill", Values$oldData),
+                               paste0("countyFill", used_Data()$names))
                        })
+
 #Code that removes the old counties and adds the new ones.
 #ignoreNull allows to map when first opened
   observeEvent({input$date_slider
@@ -205,9 +206,11 @@ oldShapes <- reactive({setdiff(paste0("countyFill",Values$oldData),
                 drillfor()
                 welltype()
                 }, {
+                #  browser()
     
     leafletProxy("myMap", session, deferUntilFlush = FALSE) %>% 
-      removeShape(oldShapes())
+      #removeShape(oldShapes())
+      clearShapes()          
     
     leafletProxy("myMap", session, deferUntilFlush = TRUE) %>%      
       addPolygons(data = isolate(used_Data()), layerId = paste0("countyFill",used_Data()$names), fillColor = pal(isolate(used_Data()$count)), 
