@@ -1,6 +1,6 @@
 library(dygraphs)
 library(xts)
-#library(tidyr)
+library(tidyr)
 
 #list of the counties to filter by
 countyList_in_scope <- function(xlim, ylim){

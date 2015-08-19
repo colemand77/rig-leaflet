@@ -206,7 +206,7 @@ oldShapes <- reactive({setdiff(paste0("countyFill",Values$oldData),
                 welltype()
                 }, {
     
-    leafletProxy("myMap", session, deferUntilFlush = TRUE) %>% 
+    leafletProxy("myMap", session, deferUntilFlush = FALSE) %>% 
       removeShape(oldShapes())
     
     leafletProxy("myMap", session, deferUntilFlush = TRUE) %>%      
