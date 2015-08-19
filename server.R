@@ -206,16 +206,14 @@ oldShapes <- reactive({setdiff(paste0("countyFill", Values$oldData),
                 drillfor()
                 welltype()
                 }, {
-                #  browser()
-    
-    leafletProxy("myMap", session, deferUntilFlush = FALSE) %>% 
-      #removeShape(oldShapes())
-      clearShapes()          
     
     leafletProxy("myMap", session, deferUntilFlush = TRUE) %>%      
       addPolygons(data = isolate(used_Data()), layerId = paste0("countyFill",used_Data()$names), fillColor = pal(isolate(used_Data()$count)), 
                   fillOpacity = 0.75, stroke = TRUE, color = "white", 
-                  weight = 1, popup = as.character(paste0(isolate(used_Data()$name),":",isolate(used_Data()$count))))
+                  weight = 1, popup = as.character(paste0(isolate(used_Data()$name),":",isolate(used_Data()$count)))) %>%
+      removeShape(oldShapes())
+       #browser()
+      #clearShapes()          
   }, ignoreNULL = FALSE)
 
 bar_group <- reactive({input$group})
